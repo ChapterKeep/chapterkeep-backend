@@ -1,0 +1,13 @@
+package com.konkuk.chapterkeep;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ChapterkeepApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ChapterkeepApplication.class, args);
+	}
+
+}
