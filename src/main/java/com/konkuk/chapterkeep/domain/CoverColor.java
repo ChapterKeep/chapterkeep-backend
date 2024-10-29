@@ -21,11 +21,4 @@ public enum CoverColor {
     public String getHexCode() {
         return hexCode;
     }
-
-    // 랜덤하게 색 표지 지정
-    public static CoverColor getRandomColor() {
-        CoverColor[] colors = CoverColor.values();
-        int randomIndex = (int) (Math.random() * colors.length);
-        return colors[randomIndex];
-    }
 }
