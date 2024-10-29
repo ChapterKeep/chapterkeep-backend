@@ -1,14 +1,13 @@
 package com.konkuk.chapterkeep.domain;
 
+import com.konkuk.chapterkeep.domain.enums.ImageType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.cglib.core.Local;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,12 +25,17 @@ public class Image {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "image_type", nullable = false)
     private ImageType imageType;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @PrePersist
     protected void onCreate() {

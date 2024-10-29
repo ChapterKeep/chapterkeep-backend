@@ -1,5 +1,7 @@
-package com.konkuk.chapterkeep.domain;
+package com.konkuk.chapterkeep.domain.posts;
 
+import com.konkuk.chapterkeep.domain.Post;
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -7,11 +9,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@DiscriminatorValue("SINGLE")
+@DiscriminatorValue("FREE")
 @PrimaryKeyJoinColumn(name = "post_id")
 @Getter
 @Setter
-public class SingleLinePost extends Post {
+public class FreePost extends Post {
 
+    @Column(name = "content", nullable = false)
     private String content;
+
 }

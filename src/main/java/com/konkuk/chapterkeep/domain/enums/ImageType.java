@@ -1,4 +1,4 @@
-package com.konkuk.chapterkeep.domain;
+package com.konkuk.chapterkeep.domain.enums;
 
 public enum ImageType {
 

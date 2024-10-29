@@ -1,10 +1,14 @@
 package com.konkuk.chapterkeep.domain;
 
+import com.konkuk.chapterkeep.domain.enums.CoverColor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,23 +32,23 @@ public class BookReview {
     @Column(name = "quotation")
     private String quotation;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
     private CoverColor coverColor;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
+    @OneToOne
+    @JoinColumn(name = "book_id")
+    private BookInfo bookInfo;
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
 }

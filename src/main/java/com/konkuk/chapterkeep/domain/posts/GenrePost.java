@@ -1,5 +1,7 @@
-package com.konkuk.chapterkeep.domain;
+package com.konkuk.chapterkeep.domain.posts;
 
+import com.konkuk.chapterkeep.domain.enums.Genre;
+import com.konkuk.chapterkeep.domain.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
