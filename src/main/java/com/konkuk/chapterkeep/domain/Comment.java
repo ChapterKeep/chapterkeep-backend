@@ -32,6 +32,9 @@ public class Comment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "is_anonymous")
+    private boolean isAnonymous;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;

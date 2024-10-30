@@ -24,10 +24,6 @@ public class Like {
     @Column(name = "like_id")
     private Long likeId;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
     @ManyToOne
     @JoinColumn(name = "book_review_id")
     private BookReview bookReview;
@@ -40,4 +36,7 @@ public class Like {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 }
