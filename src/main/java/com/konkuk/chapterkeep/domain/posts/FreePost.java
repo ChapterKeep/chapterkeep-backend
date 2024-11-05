@@ -6,16 +6,14 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @DiscriminatorValue("FREE")
 @PrimaryKeyJoinColumn(name = "post_id")
 @Getter
-@Setter
 public class FreePost extends Post {
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, length = 1500)
     private String content;
 
 }

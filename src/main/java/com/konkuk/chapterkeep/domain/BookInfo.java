@@ -4,12 +4,10 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Table(name = "BookInfo")
+@Table(name = "book_info")
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookInfo {
 
@@ -18,10 +16,10 @@ public class BookInfo {
     @Column(name = "book_id")
     private Long bookId;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = 35)
     private String title;
 
-    @Column(name = "writer", nullable = false)
+    @Column(name = "writer", nullable = false, length = 20)
     private String writer;
 
 }

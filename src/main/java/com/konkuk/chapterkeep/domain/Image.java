@@ -5,17 +5,14 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Image")
+@Table(name = "image")
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Image {
+public class Image extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,19 +23,14 @@ public class Image {
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "image_type", nullable = false)
+    @Column(name = "image_type", nullable = false, length = 100)
     private ImageType imageType;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @Transient
+    private LocalDateTime modifiedDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
 }

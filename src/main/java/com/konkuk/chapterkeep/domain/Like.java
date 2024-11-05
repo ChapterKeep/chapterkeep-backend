@@ -4,18 +4,13 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Like", uniqueConstraints = {
+@Table(name = "like", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"member_id", "post_id"}),
         @UniqueConstraint(columnNames = {"member_id", "comment_id"}),
         @UniqueConstraint(columnNames = {"member_id", "book_review_id"})})
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like {
 
@@ -24,19 +19,20 @@ public class Like {
     @Column(name = "like_id")
     private Long likeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_review_id")
     private BookReview bookReview;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
+
 }

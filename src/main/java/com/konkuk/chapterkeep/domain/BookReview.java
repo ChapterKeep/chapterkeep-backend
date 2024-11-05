@@ -5,18 +5,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "BookReview")
+@Table(name = "book_review")
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookReview {
+public class BookReview extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,28 +20,20 @@ public class BookReview {
     @Column(name = "rating", nullable = false)
     private int rating;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, length = 1000)
     private String content;
 
-    @Column(name = "quotation")
+    @Column(name = "quotation", length = 50)
     private String quotation;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
     private CoverColor coverColor;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private BookInfo bookInfo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

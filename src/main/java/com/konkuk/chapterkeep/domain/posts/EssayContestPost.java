@@ -3,15 +3,13 @@ package com.konkuk.chapterkeep.domain.posts;
 import com.konkuk.chapterkeep.domain.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @DiscriminatorValue("ESSAY")
 @PrimaryKeyJoinColumn(name = "post_id")
 @Getter
-@Setter
 public class EssayContestPost extends Post {
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, length = 2000)
     private String content;
 }

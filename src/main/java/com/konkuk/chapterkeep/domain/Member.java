@@ -1,18 +1,14 @@
 package com.konkuk.chapterkeep.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Member")
+@Table(name = "member")
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -21,25 +17,25 @@ public class Member {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 10)
     private String name;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false, length = 60)
     private String password;
 
-    @Column(name = "nickname", nullable = false)
+    @Column(name = "nickname", nullable = false, length = 10)
     private String nickname;
 
-    @Column(name = "introduction")
+    @Column(name = "introduction", length = 80)
     private String introduction;
 
-    @Column(name = "department", nullable = false)
+    @Column(name = "department", nullable = false, length = 25)
     private String department;
 
     @Column(name = "profile_url")
     private String profileUrl;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false, length = 10)
     private boolean role;
 
     @Column(name = "visibility", nullable = false)
@@ -57,36 +53,4 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookReview> bookReviews = new ArrayList<>();
 
-    // BookReview 편의 메서드
-    public void addBookReview(BookReview bookReview) {
-        bookReviews.add(bookReview);
-        bookReview.setMember(this);
-    }
-
-    public void removeBookReview(BookReview bookReview) {
-        bookReviews.remove(bookReview);
-        bookReview.setMember(null);
-    }
-
-    // Post 편의 메서드
-    public void addPost(Post post) {
-        posts.add(post);
-        post.setMember(this);
-    }
-
-    public void removePost(Post post) {
-        posts.remove(post);
-        post.setMember(null);
-    }
-
-    // Comment 편의 메서드
-    public void addComment(Comment comment) {
-        comments.add(comment);
-        comment.setMember(this);
-    }
-
-    public void removeComment(Comment comment) {
-        comments.remove(comment);
-        comment.setMember(null);
-    }
 }

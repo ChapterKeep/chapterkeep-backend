@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "KonkukBookList")
+@Table(name = "konkuk_book_list")
 @Getter
-@Setter
 public class KonkukBookList {
 
     @Id
@@ -17,13 +16,13 @@ public class KonkukBookList {
     @Column(name = "konkuk_book_list_id")
     private Long konkukBookListId;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = 35)
     private String title;
 
-    @Column(name = "writer", nullable = false)
+    @Column(name = "writer", nullable = false, length = 20)
     private String writer;
 
-    @Column(name = "department", nullable = false)
+    @Column(name = "department", nullable = false, length = 25)
     private String department;
 
     @Column(name = "library_url", nullable = false)
