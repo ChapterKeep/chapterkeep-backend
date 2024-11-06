@@ -36,7 +36,7 @@ public class Member {
     private String profileUrl;
 
     @Column(name = "role", nullable = false, length = 10)
-    private boolean role;
+    private boolean role = true;
 
     @Column(name = "visibility", nullable = false)
     private boolean visibility = true;
@@ -53,4 +53,16 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookReview> bookReviews = new ArrayList<>();
 
+
+    @Builder
+    public Member(String name, String password, String nickname, String introduction, String department, String profileUrl, Boolean role, Boolean visibility) {
+        this.name = name;
+        this.password = password;
+        this.nickname = nickname;
+        this.introduction = introduction;
+        this.department = department;
+        this.profileUrl = profileUrl;
+        this.role = role;
+        this.visibility = visibility;
+    }
 }
