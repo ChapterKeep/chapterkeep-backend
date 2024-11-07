@@ -1,6 +1,6 @@
-package com.konkuk.chapterkeep.common;
+package com.konkuk.chapterkeep.common.response.exception;
 
-import com.konkuk.chapterkeep.common.constant.Code;
+import com.konkuk.chapterkeep.common.response.constant.Code;
 import lombok.Getter;
 
 @Getter

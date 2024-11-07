@@ -1,4 +1,4 @@
-package com.konkuk.chapterkeep.config;
+package com.konkuk.chapterkeep.common.config;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

@@ -1,8 +1,8 @@
 package com.konkuk.chapterkeep.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.konkuk.chapterkeep.common.constant.Code;
-import com.konkuk.chapterkeep.common.dto.ResponseDto;
+import com.konkuk.chapterkeep.common.response.constant.Code;
+import com.konkuk.chapterkeep.common.response.dto.ResponseDto;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
