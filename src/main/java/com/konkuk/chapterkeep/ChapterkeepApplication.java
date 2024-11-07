@@ -2,14 +2,12 @@ package com.konkuk.chapterkeep;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@EnableJpaAuditing
 @SpringBootApplication
-public class ChapterKeepApplication {
+public class ChapterkeepApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ChapterKeepApplication.class, args);
+		SpringApplication.run(ChapterkeepApplication.class, args);
 	}
 
 }
