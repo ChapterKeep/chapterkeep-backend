@@ -1,4 +1,4 @@
-package com.konkuk.chapterkeep.common.response.constant;
+package com.konkuk.chapterkeep.common.response.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

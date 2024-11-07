@@ -1,7 +1,7 @@
 package com.konkuk.chapterkeep.test;
 
 import com.konkuk.chapterkeep.common.response.exception.GeneralException;
-import com.konkuk.chapterkeep.common.response.constant.Code;
+import com.konkuk.chapterkeep.common.response.enums.Code;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

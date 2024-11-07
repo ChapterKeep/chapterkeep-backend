@@ -1,6 +1,6 @@
 package com.konkuk.chapterkeep.common.response.exception;
 
-import com.konkuk.chapterkeep.common.response.constant.Code;
+import com.konkuk.chapterkeep.common.response.enums.Code;
 import com.konkuk.chapterkeep.common.response.dto.ErrorResponseDto;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;

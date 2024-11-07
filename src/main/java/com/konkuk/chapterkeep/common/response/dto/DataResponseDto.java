@@ -1,6 +1,6 @@
 package com.konkuk.chapterkeep.common.response.dto;
 
-import com.konkuk.chapterkeep.common.response.constant.Code;
+import com.konkuk.chapterkeep.common.response.enums.Code;
 import lombok.Getter;
 
 @Getter
