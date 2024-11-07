@@ -1,5 +1,6 @@
 package com.konkuk.chapterkeep.domain;
 
+import com.konkuk.chapterkeep.domain.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,8 +36,9 @@ public class Member {
     @Column(name = "profile_url")
     private String profileUrl;
 
-    @Column(name = "role", nullable = false, length = 10)
-    private boolean role = true;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
     @Column(name = "visibility", nullable = false)
     private boolean visibility = true;
@@ -55,7 +57,7 @@ public class Member {
 
 
     @Builder
-    public Member(String name, String password, String nickname, String introduction, String department, String profileUrl, Boolean role, Boolean visibility) {
+    public Member(String name, String password, String nickname, String introduction, String department, String profileUrl, Role role, Boolean visibility) {
         this.name = name;
         this.password = password;
         this.nickname = nickname;
