@@ -6,25 +6,17 @@ import lombok.Getter;
 @Getter
 public class GeneralException extends RuntimeException {
 
-    private final Code errorCode;
+    private final Code code;
 
-    public GeneralException() {
-        super(Code.INTERNAL_ERROR.getMessage());
-        this.errorCode = Code.INTERNAL_ERROR;
+
+    public GeneralException(Code code) {
+        super(code.getMessage());
+        this.code = code;
     }
 
-//    public GeneralException(String customMessage) {
-//        super(Code.INTERNAL_ERROR.getMessage(customMessage));
-//        this.errorCode = Code.INTERNAL_ERROR;
-//    }
-
-    public GeneralException(Code errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
+    public GeneralException(Code code, String customMessage) {
+        super(code.getMessage(customMessage));
+        this.code = code;
     }
 
-    public GeneralException(Code errorCode, String customMessage) {
-        super(errorCode.getMessage(customMessage));
-        this.errorCode = errorCode;
-    }
 }

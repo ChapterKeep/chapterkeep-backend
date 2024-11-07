@@ -2,29 +2,14 @@ package com.konkuk.chapterkeep.common.response.dto;
 
 import com.konkuk.chapterkeep.common.response.enums.Code;
 
-public class ErrorResponseDto extends ResponseDto{
+public class ErrorResponseDto extends ResponseDto {
 
-    private ErrorResponseDto(Code errorCode) {
-        super(false, errorCode.getCode(), errorCode.getMessage());
+    public ErrorResponseDto(Code code) {
+        super(code.getCode(), code.getMessage());
     }
 
-    private ErrorResponseDto(Code errorCode, Exception e) {
-        super(false, errorCode.getCode(), errorCode.getMessage(e));
+    public ErrorResponseDto(Code code, String message) {
+        super(code.getCode(), message);
     }
 
-    private ErrorResponseDto(Code errorCode, String customMessage) {
-        super(false, errorCode.getCode(), errorCode.getMessage(customMessage));
-    }
-
-    public static ErrorResponseDto from(Code errorCode) {
-        return new ErrorResponseDto(errorCode);
-    }
-
-    public static ErrorResponseDto of(Code errorCode, Exception e) {
-        return new ErrorResponseDto(errorCode, e);
-    }
-
-    public static ErrorResponseDto of(Code errorCode, String customMessage) {
-        return new ErrorResponseDto(errorCode, customMessage);
-    }
 }
