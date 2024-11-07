@@ -1,6 +1,6 @@
-package com.konkuk.chapterkeep.base.dto;
+package com.konkuk.chapterkeep.common.dto;
 
-import com.konkuk.chapterkeep.base.constant.Code;
+import com.konkuk.chapterkeep.common.constant.Code;
 
 public class ErrorResponseDto extends ResponseDto{
 

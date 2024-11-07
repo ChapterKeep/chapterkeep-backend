@@ -1,6 +1,6 @@
-package com.konkuk.chapterkeep.base.dto;
+package com.konkuk.chapterkeep.common.dto;
 
-import com.konkuk.chapterkeep.base.constant.Code;
+import com.konkuk.chapterkeep.common.constant.Code;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,7 +9,7 @@ import lombok.Getter;
 public class ResponseDto {
 
     private final Boolean success; // 성공 여부
-    private final int code;  // 응답 코드
+    private final String code;  // 응답 코드
     private final String message;   // 응답 메시지
 
     public static ResponseDto of(Boolean success, Code code) {
