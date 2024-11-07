@@ -13,38 +13,29 @@ public enum Code {
 
     /*
 
-    1. S000 : 성공 응답
-	2. Exxx : 실패 응답
+    1. Sxxx : 성공 응답
+	2. EXxxx : 실패 응답
 
      */
 
-    // 성공 응답
-    OK("S000", HttpStatus.OK, "OK"),
-    CREATED("E001", HttpStatus.CREATED, "Resource created successfully"),
-    ACCEPTED("E002", HttpStatus.ACCEPTED, "Request accepted but not processed yet"),
-    NO_CONTENT("E003", HttpStatus.NO_CONTENT, "Request succeeded, no content returned"),
+    // 성공 응답 (Sxxx)
+    OK("S000", HttpStatus.OK, "요청이 성공하였습니다."),
 
-    // 클라이언트 오류
-    BAD_REQUEST("E004", HttpStatus.BAD_REQUEST, "Bad request"),
-    VALIDATION_ERROR("E005", HttpStatus.BAD_REQUEST, "Validation error"),
-    NOT_FOUND("E006", HttpStatus.NOT_FOUND, "Requested resource is not found"),
-    CONFLICT("E007", HttpStatus.CONFLICT, "Conflict in data"),
-    PAYLOAD_TOO_LARGE("E008", HttpStatus.PAYLOAD_TOO_LARGE, "Payload too large"),
-    UNSUPPORTED_MEDIA_TYPE("E009", HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported media type"),
+    // 클라이언트 오류 (ECxxx)
+    BAD_REQUEST("EC001", HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    NOT_FOUND("EC002", HttpStatus.NOT_FOUND, "요청한 리소스를 찾을 수 없습니다."),
+    INVALID_INPUT_VALUE("EC003", HttpStatus.BAD_REQUEST, "유효하지 않은 값을 입력하였습니다."),
 
-    // 서버 오류
-    INTERNAL_ERROR("E010", HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
-    DATA_ACCESS_ERROR("E011", HttpStatus.INTERNAL_SERVER_ERROR, "Data access error"),
-    SERVICE_UNAVAILABLE("E012", HttpStatus.SERVICE_UNAVAILABLE, "Service unavailable"),
-    GATEWAY_TIMEOUT("E013", HttpStatus.GATEWAY_TIMEOUT, "Gateway timeout"),
-    NOT_IMPLEMENTED("E014", HttpStatus.NOT_IMPLEMENTED, "Not implemented"),
+    // 서버 오류 (ESxxx)
+    INTERNAL_ERROR("ES001", HttpStatus.INTERNAL_SERVER_ERROR, "예기치 못한 서버 에러가 발생했습니다."),
 
-    // 인증 오류
-    UNAUTHORIZED("E015", HttpStatus.UNAUTHORIZED, "User unauthorized"),
-    TOKEN_EXPIRED("E016", HttpStatus.UNAUTHORIZED, "Token expired"),
+    // 인증,인가 오류 (EUxxx)
+    UNAUTHORIZED("EU001", HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
+    TOKEN_EXPIRED("EU002", HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
+    FORBIDDEN("EU003", HttpStatus.FORBIDDEN, "접근이 허용되지 않았습니다.");
 
-    // 인가 오류
-    FORBIDDEN("E017", HttpStatus.FORBIDDEN, "Access forbidden");
+    // 비즈니스 오류 (EBxxx)
+
 
     private final String code;
     private final HttpStatus httpStatus;
