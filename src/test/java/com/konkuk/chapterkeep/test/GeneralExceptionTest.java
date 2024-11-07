@@ -1,7 +1,7 @@
 package com.konkuk.chapterkeep.test;
 
-import com.konkuk.chapterkeep.base.GeneralException;
-import com.konkuk.chapterkeep.base.constant.Code;
+import com.konkuk.chapterkeep.common.GeneralException;
+import com.konkuk.chapterkeep.common.constant.Code;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
