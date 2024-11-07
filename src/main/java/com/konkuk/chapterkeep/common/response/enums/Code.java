@@ -19,7 +19,7 @@ public enum Code {
      */
 
     // 성공 응답 (Sxxx)
-    OK( HttpStatus.OK.value(),"S000", "요청이 성공하였습니다."),
+    OK( HttpStatus.OK.value(),"S001", "요청이 성공하였습니다."),
 
     // 클라이언트 오류 (ECxxx)
     BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "EC001", "잘못된 요청입니다."),
@@ -28,6 +28,7 @@ public enum Code {
 
     // 서버 오류 (ESxxx)
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES001", "예기치 못한 서버 에러가 발생했습니다."),
+    DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES002", "데이터베이스 처리 중 오류가 발생했습니다."),
 
     // 인증,인가 오류 (EUxxx)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED.value(), "EU001", "인증되지 않은 사용자입니다."),

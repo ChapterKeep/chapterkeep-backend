@@ -30,9 +30,6 @@ public class Member {
     @Column(name = "introduction", length = 80)
     private String introduction;
 
-    @Column(name = "department", nullable = false, length = 25)
-    private String department;
-
     @Column(name = "profile_url")
     private String profileUrl;
 
@@ -57,12 +54,11 @@ public class Member {
 
 
     @Builder
-    public Member(String name, String password, String nickname, String introduction, String department, String profileUrl, Role role, Boolean visibility) {
+    public Member(String name, String password, String nickname, String introduction, String profileUrl, Role role, Boolean visibility) {
         this.name = name;
         this.password = password;
         this.nickname = nickname;
         this.introduction = introduction;
-        this.department = department;
         this.profileUrl = profileUrl;
         this.role = role;
         this.visibility = visibility;

@@ -1,4 +1,4 @@
-package com.konkuk.chapterkeep.security;
+package com.konkuk.chapterkeep.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +35,7 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/login", "/signup").permitAll() // 모든 사용자 허용
+                        .requestMatchers("/","/login", "/signup","/check-id","/check-nickname").permitAll() // 모든 사용자 허용
                         .requestMatchers("/admin").hasRole("ADMIN") // admin 권한 사용자만 허용
                         .anyRequest().authenticated()); // 로그인한 사용자만 허용
 
