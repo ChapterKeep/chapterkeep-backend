@@ -61,6 +61,6 @@ public class Member {
         this.introduction = introduction;
         this.profileUrl = profileUrl;
         this.role = role;
-        this.visibility = visibility;
+        this.visibility = (visibility != null) ? visibility : true; // null인 경우 true로 설정
     }
 }

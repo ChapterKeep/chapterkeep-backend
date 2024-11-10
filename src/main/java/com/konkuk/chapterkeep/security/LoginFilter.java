@@ -83,7 +83,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
         // 추출한 username 과 role을 기반으로 JWT 토큰 생성
-        String token = jwtUtil.createJwt(username, role, 60*60*10L); // 인자 : username, role, 유효시간(36,000초인 10시간으로 지정)
+        String token = jwtUtil.createJwt(username, role, 60 * 60 * 10 * 1000L); // 인자 : username, role, 유효시간(36,000초인 10시간으로 지정)
 
         // jwt 토큰을 응답 헤더에 담기
         response.addHeader("Authorization","Bearer " + token); // ex) 'Authorization: Bearer 인증토큰'
