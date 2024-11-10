@@ -1,10 +1,10 @@
-package com.konkuk.chapterkeep.controller;
+package com.konkuk.chapterkeep.member.controller;
 
 import com.konkuk.chapterkeep.common.response.dto.DataResponseDto;
 import com.konkuk.chapterkeep.common.response.enums.Code;
-import com.konkuk.chapterkeep.dto.member.SignUpReqDto;
-import com.konkuk.chapterkeep.dto.member.SignUpResDto;
-import com.konkuk.chapterkeep.service.SignUpService;
+import com.konkuk.chapterkeep.member.dto.SignUpReqDto;
+import com.konkuk.chapterkeep.member.dto.SignUpResDto;
+import com.konkuk.chapterkeep.member.service.SignUpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

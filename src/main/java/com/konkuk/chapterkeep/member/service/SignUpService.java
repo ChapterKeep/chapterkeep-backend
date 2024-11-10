@@ -1,12 +1,12 @@
-package com.konkuk.chapterkeep.service;
+package com.konkuk.chapterkeep.member.service;
 
 import com.konkuk.chapterkeep.common.response.enums.Code;
 import com.konkuk.chapterkeep.common.response.exception.GeneralException;
 import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.domain.enums.Role;
-import com.konkuk.chapterkeep.dto.member.SignUpReqDto;
-import com.konkuk.chapterkeep.dto.member.SignUpResDto;
-import com.konkuk.chapterkeep.repository.MemberRepository;
+import com.konkuk.chapterkeep.member.dto.SignUpReqDto;
+import com.konkuk.chapterkeep.member.dto.SignUpResDto;
+import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

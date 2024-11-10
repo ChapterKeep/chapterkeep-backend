@@ -1,4 +1,4 @@
-package com.konkuk.chapterkeep.dto.member;
+package com.konkuk.chapterkeep.member.dto;
 
 import lombok.Builder;
 import lombok.Getter;
