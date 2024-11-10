@@ -20,7 +20,7 @@ import java.util.UUID;
 public class ImageService {
     private final AmazonS3 amazonS3;
 
-    @Value("${spring.cloud.aws.s3.bucket}")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
 
