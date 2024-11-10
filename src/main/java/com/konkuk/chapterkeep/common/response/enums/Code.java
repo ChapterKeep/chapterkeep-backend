@@ -28,9 +28,10 @@ public enum Code {
     FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST.value(), "EC004", "파일 크기가 허용된 한도를 초과했습니다."),
     INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST.value(), "EC005", "허용되지 않은 파일 형식입니다."),
     FILE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "EC006", "업로드된 파일을 찾을 수 없습니다."),
+    INVALID_INPUT_FORMAT(HttpStatus.BAD_REQUEST.value(), "EC007", "유효하지 않은 형식의 요청입니다."),
 
 
-    // 서버 오류 (ESxxx)
+    // 서버 오류 (ESxxx),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES001", "예기치 못한 서버 에러가 발생했습니다."),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES002", "데이터베이스 처리 중 오류가 발생했습니다."),
     FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES003", "파일 업로드 중 오류가 발생했습니다."),
@@ -39,7 +40,8 @@ public enum Code {
     // 인증,인가 오류 (EUxxx)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED.value(), "EU001", "인증되지 않은 사용자입니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED.value(), "EU002", "토큰이 만료되었습니다."),
-    FORBIDDEN(HttpStatus.FORBIDDEN.value(), "EU003", "접근이 허용되지 않았습니다.");
+    FORBIDDEN(HttpStatus.FORBIDDEN.value(), "EU003", "접근이 허용되지 않았습니다."),
+    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "EU004", "존재하지 않는 회원입니다.");
 
     // 비즈니스 오류 (EBxxx)
 

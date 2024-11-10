@@ -1,16 +1,32 @@
 package com.konkuk.chapterkeep.security.config;
 
+import com.konkuk.chapterkeep.security.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final JWTUtil jwtUtil;
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return this.authenticationConfiguration.getAuthenticationManager();
+    }
+
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
@@ -38,6 +54,15 @@ public class SecurityConfig {
                         .requestMatchers("/","/login", "/signup","/check-id","/check-nickname").permitAll() // 모든 사용자 허용
                         .requestMatchers("/admin").hasRole("ADMIN") // admin 권한 사용자만 허용
                         .anyRequest().authenticated()); // 로그인한 사용자만 허용
+
+        // JWTFilter 등록
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+
+        // LoginFilter 등록
+        http
+                .addFilterAt(new LoginFilter( authenticationManager(authenticationConfiguration) , jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
 
         // 세션 설정
         http
