@@ -1,12 +1,14 @@
-package com.konkuk.chapterkeep.controller;
+package com.konkuk.chapterkeep.member.controller;
 
 import com.konkuk.chapterkeep.common.response.dto.DataResponseDto;
 import com.konkuk.chapterkeep.common.response.enums.Code;
-import com.konkuk.chapterkeep.dto.member.SignUpReqDto;
-import com.konkuk.chapterkeep.dto.member.SignUpResDto;
-import com.konkuk.chapterkeep.service.SignUpService;
+import com.konkuk.chapterkeep.member.dto.SignUpReqDto;
+import com.konkuk.chapterkeep.member.dto.SignUpResDto;
+import com.konkuk.chapterkeep.member.service.SignUpService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,10 +32,12 @@ public class SignUpController {
         else
             return new DataResponseDto<>(isExists, Code.OK,"사용 가능한 닉네임");
     }
-    @PostMapping("/signup")
-    public DataResponseDto<SignUpResDto> signUp(@RequestBody SignUpReqDto signUpReqDto){
+    @PostMapping(value = "/signup")
+    public DataResponseDto<SignUpResDto> signUp(
+            @RequestPart("info") SignUpReqDto info,
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage ){
 
-        SignUpResDto response = signUpService.signUpProcess(signUpReqDto);
+        SignUpResDto response = signUpService.signUpProcess(info, profileImage);
 
         return new DataResponseDto<>(response, Code.OK);
     }

@@ -25,10 +25,16 @@ public enum Code {
     BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "EC001", "잘못된 요청입니다."),
     NOT_FOUND( HttpStatus.NOT_FOUND.value(), "EC002", "요청한 리소스를 찾을 수 없습니다."),
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST.value(), "EC003", "유효하지 않은 값을 입력하였습니다."),
+    FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST.value(), "EC004", "파일 크기가 허용된 한도를 초과했습니다."),
+    INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST.value(), "EC005", "허용되지 않은 파일 형식입니다."),
+    FILE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "EC006", "업로드된 파일을 찾을 수 없습니다."),
+
 
     // 서버 오류 (ESxxx)
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES001", "예기치 못한 서버 에러가 발생했습니다."),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES002", "데이터베이스 처리 중 오류가 발생했습니다."),
+    FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES003", "파일 업로드 중 오류가 발생했습니다."),
+
 
     // 인증,인가 오류 (EUxxx)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED.value(), "EU001", "인증되지 않은 사용자입니다."),
