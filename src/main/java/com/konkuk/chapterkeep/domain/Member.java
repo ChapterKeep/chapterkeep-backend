@@ -54,7 +54,8 @@ public class Member {
 
 
     @Builder
-    public Member(String name, String password, String nickname, String introduction, String profileUrl, Role role, Boolean visibility) {
+    public Member(String name, String password, String nickname, String introduction,
+                  String profileUrl, Role role, Boolean visibility) {
         this.name = name;
         this.password = password;
         this.nickname = nickname;
@@ -64,7 +65,8 @@ public class Member {
         this.visibility = (visibility != null) ? visibility : true; // null인 경우 true로 설정
     }
 
-    public static Member createMember(String name, String password, String nickname, String introduction, String profileUrl, Role role, boolean visibility) {
+    public static Member createMember(String name, String password, String nickname, String introduction,
+                                      String profileUrl, Role role, boolean visibility) {
         return Member.builder()
                 .name(name)
                 .password(password)
@@ -76,3 +78,4 @@ public class Member {
                 .build();
     }
 }
+

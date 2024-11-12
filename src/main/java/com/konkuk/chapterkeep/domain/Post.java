@@ -54,4 +54,12 @@ public class Post extends BaseTimeEntity {
                 .isAnonymous(isAnonymous)
                 .build();
     }
+
+    // 연관관계 제거 메서드
+    public void removeMember() {
+        if (this.member != null) {
+            this.member.getPosts().remove(this);
+            this.member = null;
+        }
+    }
 }
