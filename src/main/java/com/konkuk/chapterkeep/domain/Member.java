@@ -63,4 +63,16 @@ public class Member {
         this.role = role;
         this.visibility = visibility;
     }
+
+    public static Member createMember(String name, String password, String nickname, String introduction, String profileUrl, Role role, boolean visibility) {
+        return Member.builder()
+                .name(name)
+                .password(password)
+                .nickname(nickname)
+                .introduction(introduction)
+                .profileUrl(profileUrl)
+                .role(role)
+                .visibility(visibility)
+                .build();
+    }
 }
