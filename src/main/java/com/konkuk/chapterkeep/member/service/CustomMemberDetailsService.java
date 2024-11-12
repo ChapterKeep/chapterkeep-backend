@@ -19,12 +19,8 @@ public class CustomMemberDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Member member = memberRepository.findByName(username);
-
-        if(member != null){
-            return new CustomMemberDetails(member);
-        }
-
-        return null;
+        return memberRepository.findByName(username)
+                .map(CustomMemberDetails::new)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 }
