@@ -1,6 +1,6 @@
 package com.konkuk.chapterkeep.security;
 
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,21 +23,49 @@ public class JWTUtil {
 
     // 토큰에서 username 검증,추출하는 메서드
     public String getUsername(String token) {
-        // jwt 파싱해서 secretKey로 서명검증 및 payload에서 username 추출
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+        try {
+            return parseToken(token).get("username", String.class);
+        } catch (ExpiredJwtException e) {
+            throw new IllegalArgumentException("토큰이 만료되었습니다.");
+        } catch (SignatureException e) {
+            throw new IllegalArgumentException("서명이 유효하지 않습니다.");
+        } catch (Exception e) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
     }
 
     // 토큰에서 role 검증,추출하는 메서드
     public String getRole(String token) {
-        // jwt 파싱해서 secretKey로 서명검증 및 payload에서 role 추출
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+        try {
+            return parseToken(token).get("role", String.class);
+        } catch (ExpiredJwtException e) {
+            throw new IllegalArgumentException("토큰이 만료되었습니다.");
+        } catch (SignatureException e) {
+            throw new IllegalArgumentException("서명이 유효하지 않습니다.");
+        } catch (Exception e) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
     }
 
     // 토큰에서 만료여부 검증,추출하는 메서드
     public Boolean isExpired(String token) {
-        // jwt 파싱해서 secretKey로 서명검증 및 payload에서 현재시간 기준 만료여부 추출
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        try {
+            return parseToken(token).getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            throw new IllegalArgumentException("토큰이 만료되었습니다.");
+        } catch (Exception e) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
     }
+
+    private Claims parseToken(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
 
     // 토큰 생성 메서드
     // username, role, 토큰유효시간 을 입력받아 JWT 토큰을 생성해 String 형태로 반환
