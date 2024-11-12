@@ -33,7 +33,7 @@ public class ImageService {
 
         //최대용량 체크
         if (image.getSize() > FileConstant.MAX_IMAGE_SIZE) {
-            throw new GeneralException(Code.FILE_SIZE_EXCEEDED, "10MB 이하 파일만 업로드 할 수 있습니다.");
+            throw new GeneralException(Code.FILE_SIZE_EXCEEDED, "5MB 이하 파일만 업로드 할 수 있습니다.");
         }
 
 

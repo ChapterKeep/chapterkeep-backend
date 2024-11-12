@@ -79,7 +79,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 customMessage = "서명이 유효하지 않습니다.";
             } else {
                 errorCode = Code.INVALID_TOKEN;
-                customMessage = "유효하지 않은 토큰입니다.";
+                customMessage = "";
             }
 
             setErrorResponse(response, errorCode, customMessage);
