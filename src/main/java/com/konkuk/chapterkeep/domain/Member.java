@@ -62,7 +62,7 @@ public class Member {
         this.introduction = introduction;
         this.profileUrl = profileUrl;
         this.role = role;
-        this.visibility = (visibility != null) ? visibility : true; // null인 경우 true로 설정
+        this.visibility = visibility;
     }
 
     public static Member createMember(String name, String password, String nickname, String introduction,
