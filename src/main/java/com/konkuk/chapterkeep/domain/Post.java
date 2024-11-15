@@ -2,6 +2,7 @@ package com.konkuk.chapterkeep.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.util.ArrayList;
@@ -33,4 +34,32 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    @Builder
+    private Post(Member member, String title, boolean isAnonymous) {
+        this.member = member;
+        this.title = title;
+        this.isAnonymous = isAnonymous;
+
+        // 양방향 연관관계 설정
+        if (member != null) {
+            member.getPosts().add(this);
+        }
+    }
+
+    // 생성 메서드
+    public static Post createPost(Member member, String title, boolean isAnonymous) {
+        return Post.builder()
+                .member(member)
+                .title(title)
+                .isAnonymous(isAnonymous)
+                .build();
+    }
+
+    // 연관관계 제거 메서드
+    public void removeMember() {
+        if (this.member != null) {
+            this.member.getPosts().remove(this);
+            this.member = null;
+        }
+    }
 }

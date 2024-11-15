@@ -43,15 +43,15 @@ public class SignUpService {
 
         Member member;
         try {
-            member = Member.builder()
-                    .name(username)
-                    .password(bCryptPasswordEncoder.encode(signUpReqDto.getPassword())) // 암호화
-                    .nickname(nickname)
-                    .role(Role.USER)
-                    .introduction(signUpReqDto.getIntroduction())
-                    .visibility(true)
-                    .profileUrl(profileUrl)
-                    .build();
+            member = Member.createMember(
+                    username,
+                    bCryptPasswordEncoder.encode(signUpReqDto.getPassword()), // 암호화
+                    nickname,
+                    signUpReqDto.getIntroduction(),
+                    profileUrl,
+                    Role.USER,
+                    true
+            );
             memberRepository.save(member);
         } catch (DataAccessException e) {
             throw new GeneralException(Code.DATABASE_ERROR, "회원 정보 저장 도중 오류 발생");
@@ -62,8 +62,6 @@ public class SignUpService {
                 .memberId(member.getMemberId())
                 .build();
     }
-
-
 
     public boolean isUsernameExists(String username) {
         return memberRepository.existsByName(username);
