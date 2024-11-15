@@ -54,13 +54,28 @@ public class Member {
 
 
     @Builder
-    public Member(String name, String password, String nickname, String introduction, String profileUrl, Role role, Boolean visibility) {
+    public Member(String name, String password, String nickname, String introduction,
+                  String profileUrl, Role role, Boolean visibility) {
         this.name = name;
         this.password = password;
         this.nickname = nickname;
         this.introduction = introduction;
         this.profileUrl = profileUrl;
         this.role = role;
-        this.visibility = (visibility != null) ? visibility : true; // null인 경우 true로 설정
+        this.visibility = visibility;
+    }
+
+    public static Member createMember(String name, String password, String nickname, String introduction,
+                                      String profileUrl, Role role, boolean visibility) {
+        return Member.builder()
+                .name(name)
+                .password(password)
+                .nickname(nickname)
+                .introduction(introduction)
+                .profileUrl(profileUrl)
+                .role(role)
+                .visibility(visibility)
+                .build();
     }
 }
+
