@@ -15,3 +15,19 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+cloud:
+  aws:
+    s3:
+      bucket: ${BUCKETNAME}
+      bucket-url: ${BUCKETURL}
+    region:
+      static: ${AWS_REGION}
+
+    credentials:
+      accessKey: ${ACCESS_KEYS3}
+      secretKey: ${SECRET_KEYS3}
+
+    stack:
+      auto: false # CloudFormation 스택을 자동으로 구성하지 않도록 방지
