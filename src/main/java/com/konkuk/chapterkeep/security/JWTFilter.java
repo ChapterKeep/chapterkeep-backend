@@ -18,6 +18,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.konkuk.chapterkeep.domain.Member.createMember;
+
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -58,15 +60,7 @@ public class JWTFilter extends OncePerRequestFilter {
 //            System.out.println("[DEBUG] 토큰 username 과 role 추출 이후");
 
             // 추출한 정보로 member 생성
-            Member member = Member.builder()
-                    .name(username)
-                    .password("")
-                    .nickname("")
-                    .introduction("")
-                    .profileUrl("")
-                    .role(Role.valueOf(role))
-                    .visibility(true)
-                    .build();
+            Member member = createMember(username, "", "", "", "", Role.valueOf(role), true);
 
 //            System.out.println("[DEBUG] 추출한 정보로 member 생성 이후");
 
