@@ -19,11 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class SignUpService {
+public class AccountService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ImageService imageService;
+    private final MemberService memberService;
+
 
 
     public SignUpResDto signUpProcess(SignUpReqDto signUpReqDto, MultipartFile profileImage) {
@@ -61,6 +63,15 @@ public class SignUpService {
         return SignUpResDto.builder()
                 .memberId(member.getMemberId())
                 .build();
+    }
+    public String deleteAccountProcess(String username) {
+        Long memberId = memberService.getCurrentMemberId();
+        if (memberRepository.findById(memberId).equals(memberRepository.findByName(username))) {
+            memberRepository.deleteByMemberId(memberId);
+        }else{
+            throw new GeneralException(Code.MEMBER_MISMATCH, "회원 이름이 현재 계정과 다름");
+        }
+        return username + " 회원 탈퇴 성공";
     }
 
     public boolean isUsernameExists(String username) {
