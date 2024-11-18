@@ -29,12 +29,12 @@ public class JWTFilter extends OncePerRequestFilter {
         try {
             // request 헤더에서 jwt 토큰 추출
             String authorization = request.getHeader("Authorization");
-            System.out.println("[DEBUG] Authorization 헤더 값: " + authorization);
+//            System.out.println("[DEBUG] Authorization 헤더 값: " + authorization);
 
 
             // Authorization 헤더 검증
             if (authorization == null || !authorization.startsWith("Bearer ")) {
-                System.out.println("[DEBUG] Authorization 헤더가 null이거나 Bearer로 시작하지 않습니다.");
+//                System.out.println("[DEBUG] Authorization 헤더가 null이거나 Bearer로 시작하지 않습니다.");
                 System.out.println("token null");
                 filterChain.doFilter(request, response); // 다음 필터로 요청, 응답 전달
                 return; // 헤더 검증 실패 시 메서드 종료 (필수)
@@ -42,14 +42,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
             // Bearer 제거 후 순수 토큰 추출
             String token = authorization.split(" ")[1]; // 요청 헤더에서 추출한 jwt 토큰을 공백을 기준으로 분리하여 생성된 배열에서 두 번째 인자 추출 <= ["Bearer", "토큰값"]
-            System.out.println("[DEBUG] JWT 토큰 값: " + token);
+//            System.out.println("[DEBUG] JWT 토큰 값: " + token);
 
             // 토큰 만료 여부 검증
             if (jwtUtil.isExpired(token)) {
                 throw new IllegalArgumentException("토큰이 만료되었습니다.");
             }
 
-            System.out.println("[DEBUG] 토큰 만료 여부 검증 이후");
+//            System.out.println("[DEBUG] 토큰 만료 여부 검증 이후");
 
             // 토큰에서 username 과 role 추출
             String username = jwtUtil.getUsername(token);
