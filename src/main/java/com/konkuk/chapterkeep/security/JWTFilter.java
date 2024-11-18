@@ -18,6 +18,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.konkuk.chapterkeep.domain.Member.createMember;
+
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -29,9 +31,12 @@ public class JWTFilter extends OncePerRequestFilter {
         try {
             // request 헤더에서 jwt 토큰 추출
             String authorization = request.getHeader("Authorization");
+//            System.out.println("[DEBUG] Authorization 헤더 값: " + authorization);
+
 
             // Authorization 헤더 검증
             if (authorization == null || !authorization.startsWith("Bearer ")) {
+//                System.out.println("[DEBUG] Authorization 헤더가 null이거나 Bearer로 시작하지 않습니다.");
                 System.out.println("token null");
                 filterChain.doFilter(request, response); // 다음 필터로 요청, 응답 전달
                 return; // 헤더 검증 실패 시 메서드 종료 (필수)
@@ -39,30 +44,41 @@ public class JWTFilter extends OncePerRequestFilter {
 
             // Bearer 제거 후 순수 토큰 추출
             String token = authorization.split(" ")[1]; // 요청 헤더에서 추출한 jwt 토큰을 공백을 기준으로 분리하여 생성된 배열에서 두 번째 인자 추출 <= ["Bearer", "토큰값"]
+//            System.out.println("[DEBUG] JWT 토큰 값: " + token);
 
             // 토큰 만료 여부 검증
             if (jwtUtil.isExpired(token)) {
                 throw new IllegalArgumentException("토큰이 만료되었습니다.");
             }
 
+//            System.out.println("[DEBUG] 토큰 만료 여부 검증 이후");
+
             // 토큰에서 username 과 role 추출
             String username = jwtUtil.getUsername(token);
             String role = jwtUtil.getRole(token);
 
+//            System.out.println("[DEBUG] 토큰 username 과 role 추출 이후");
+
             // 추출한 정보로 member 생성
-            Member member = Member.builder()
-                    .name(username)
-                    .role(Role.valueOf(role))
-                    .build();
+            Member member = createMember(username, "", "", "", "", Role.valueOf(role), true);
+
+//            System.out.println("[DEBUG] 추출한 정보로 member 생성 이후");
 
             // UserDetails 에 member 담기
             CustomMemberDetails customMemberDetails = new CustomMemberDetails(member);
 
+//            System.out.println("[DEBUG] UserDetails 에 member 담기 이후");
+
             // 시큐리티 인증 토큰 객체 생성
             Authentication authToken = new UsernamePasswordAuthenticationToken(customMemberDetails, null, customMemberDetails.getAuthorities());
 
+//            System.out.println("[DEBUG] 시큐리티 인증 토큰 객체 생성 이후");
+
             // 임시 세션에 사용자 등록
             SecurityContextHolder.getContext().setAuthentication(authToken);
+
+//            System.out.println("[DEBUG] 임시 세션에 사용자 등록 이후");
+
 
             // 다음 필터로 요청, 응답 전달
             filterChain.doFilter(request, response);

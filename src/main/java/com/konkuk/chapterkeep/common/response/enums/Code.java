@@ -23,12 +23,13 @@ public enum Code {
 
     // 클라이언트 오류 (ECxxx)
     BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "EC001", "잘못된 요청입니다."),
-    NOT_FOUND( HttpStatus.NOT_FOUND.value(), "EC002", "요청한 리소스를 찾을 수 없습니다."),
+    NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EC002", "요청한 리소스를 찾을 수 없습니다."),
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST.value(), "EC003", "유효하지 않은 값을 입력하였습니다."),
     FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST.value(), "EC004", "파일 크기가 허용된 한도를 초과했습니다."),
     INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST.value(), "EC005", "허용되지 않은 파일 형식입니다."),
     FILE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "EC006", "업로드된 파일을 찾을 수 없습니다."),
     INVALID_INPUT_FORMAT(HttpStatus.BAD_REQUEST.value(), "EC007", "유효하지 않은 형식의 요청입니다."),
+    MEMBER_MISMATCH(HttpStatus.BAD_REQUEST.value(), "EC008", "요청한 회원 정보가 일치하지 않습니다."),
 
 
     // 서버 오류 (ESxxx),
