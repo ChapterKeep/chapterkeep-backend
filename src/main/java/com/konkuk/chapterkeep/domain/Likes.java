@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
         @UniqueConstraint(columnNames = {"member_id", "book_review_id"})})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like {
+public class Likes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
