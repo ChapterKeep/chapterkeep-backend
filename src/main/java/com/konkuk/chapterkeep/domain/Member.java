@@ -55,7 +55,7 @@ public class Member {
 
     @Builder
     public Member(String name, String password, String nickname, String introduction,
-                  String profileUrl, Role role, Boolean visibility) {
+                  String profileUrl, Role role, boolean visibility) {
         this.name = name;
         this.password = password;
         this.nickname = nickname;

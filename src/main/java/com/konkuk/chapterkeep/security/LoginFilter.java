@@ -87,6 +87,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         // jwt 토큰을 응답 헤더에 담기
         response.addHeader("Authorization","Bearer " + token); // ex) 'Authorization: Bearer 인증토큰'
+        System.out.println(token);
 
         // 바디에 DataResponseDto 형식으로 응답 설정
         DataResponseDto<Map<String, String>> successResponse = new DataResponseDto<>(

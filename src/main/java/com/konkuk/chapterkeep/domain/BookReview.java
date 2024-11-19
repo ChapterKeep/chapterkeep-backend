@@ -30,10 +30,7 @@ public class BookReview extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private CoverColor coverColor;
 
-    @Column(name = "cover_url")
-    private String coverUrl;
-
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private BookInfo bookInfo;
 
@@ -42,15 +39,14 @@ public class BookReview extends BaseTimeEntity {
     private Member member;
 
     @Builder
-    private BookReview(Member member, int rating, String content, String quotation,
-                       CoverColor coverColor, String coverUrl, BookInfo bookInfo) {
+    private BookReview(Member member, BookInfo bookInfo, int rating, String content, String quotation,
+                       CoverColor coverColor) {
         this.member = member;
+        this.bookInfo = bookInfo;
         this.rating = rating;
         this.content = content;
         this.quotation = quotation;
         this.coverColor = coverColor;
-        this.coverUrl = coverUrl;
-        this.bookInfo = bookInfo;
 
         // 연관관계 설정
         if (member != null) {
@@ -60,14 +56,13 @@ public class BookReview extends BaseTimeEntity {
 
     // 생성 메서드
     public static BookReview createBookReview(Member member, int rating, String content, String quotation,
-                                              String coverUrl, CoverColor coverColor, BookInfo bookInfo) {
+                                              CoverColor coverColor, BookInfo bookInfo) {
         return BookReview.builder()
                 .member(member)
                 .rating(rating)
                 .content(content)
                 .quotation(quotation)
                 .coverColor(coverColor)
-                .coverUrl(coverUrl)
                 .bookInfo(bookInfo)
                 .build();
     }

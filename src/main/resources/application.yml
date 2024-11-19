@@ -17,6 +17,10 @@ spring:
         format_sql: true
   jwt:
     secret: ${JWT_SECRET_KEY}
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    enabled: true
 cloud:
   aws:
     s3:
@@ -31,3 +35,7 @@ cloud:
 
     stack:
       auto: false # CloudFormation 스택을 자동으로 구성하지 않도록 방지
+naver:
+  api:
+    client-id: ${CLIENT_ID}
+    client-secret: ${CLIENT_SECRET}
