@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/likes")
+@RequestMapping("book-review")
 public class LikesController {
 
     private final LikesService likesService;
 
-    @PostMapping("/{reviewId}/toggle")
+    @PostMapping("/{reviewId}/toggle-like")
     public DataResponseDto<?> toggleLike(@PathVariable Long reviewId) {
         likesService.toggleLike(reviewId);
         return new DataResponseDto<>(Code.OK, "좋아요 상태 변경 성공");

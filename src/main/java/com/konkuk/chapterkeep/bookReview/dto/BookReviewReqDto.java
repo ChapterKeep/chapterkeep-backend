@@ -9,6 +9,7 @@ public class BookReviewReqDto {
 
     private BookDto bookInfo;
 
+    private String reviewTitle;
     private int rating;
     private String quotation;
     private String content;

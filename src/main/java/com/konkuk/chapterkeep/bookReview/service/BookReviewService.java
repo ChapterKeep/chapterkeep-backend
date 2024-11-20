@@ -60,6 +60,7 @@ public class BookReviewService {
         // BookReview 저장
         BookReview bookReview = BookReview.createBookReview(
                 member,
+                bookReviewReqDto.getReviewTitle(),
                 bookReviewReqDto.getRating(),
                 bookReviewReqDto.getQuotation(),
                 bookReviewReqDto.getContent(),
@@ -74,10 +75,12 @@ public class BookReviewService {
                         .writer(bookInfo.getWriter())
                         .coverUrl(bookInfo.getCoverUrl())
                         .build())
+                .reviewTitle(bookReview.getReviewTitle())
                 .rating(bookReview.getRating())
                 .quotation(bookReview.getQuotation())
                 .content(bookReview.getContent())
                 .coverColor(bookReview.getCoverColor().name())
+                .nickname(member.getNickname())
                 .build();
     }
 
@@ -103,13 +106,14 @@ public class BookReviewService {
         return BookReviewResDto.builder()
                 .reviewId(reviewId)
                 .bookInfo(bookInfo)
+                .reviewTitle(bookReview.getReviewTitle())
                 .rating(bookReview.getRating())
                 .quotation(bookReview.getQuotation())
                 .content(bookReview.getContent())
                 .coverColor(coverColor)
                 .createdAt(bookReview.getCreatedDate())
                 .updatedAt(bookReview.getModifiedDate())
-                .username(member.getNickname())
+                .nickname(member.getNickname())
                 .likesCount(likesRepository.countByBookReview_BookReviewId(reviewId))
                 .build();
     }
@@ -129,6 +133,7 @@ public class BookReviewService {
         }
 
         bookReview.update(
+                bookReviewReqDto.getReviewTitle(),
                 bookReviewReqDto.getRating(),
                 bookReviewReqDto.getQuotation(),
                 bookReviewReqDto.getContent(),

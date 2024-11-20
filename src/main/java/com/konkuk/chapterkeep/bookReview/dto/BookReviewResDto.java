@@ -16,26 +16,28 @@ public class BookReviewResDto {
 
     private Long reviewId;
     private BookDto bookInfo;
+    private String reviewTitle;
     private int rating;
     private String quotation;
     private String content;
     private String coverColor;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private String username;
+    private String nickname;
     private long likesCount;
 
     public static BookReviewResDto fromEntity(BookReview bookReview, long likesCount) {
         return BookReviewResDto.builder()
                 .reviewId(bookReview.getBookReviewId())
                 .bookInfo(BookDto.fromEntity(bookReview.getBookInfo()))
+                .reviewTitle(bookReview.getReviewTitle())
                 .rating(bookReview.getRating())
                 .quotation(bookReview.getQuotation())
                 .content(bookReview.getContent())
                 .coverColor(bookReview.getCoverColor().name())
                 .createdAt(bookReview.getCreatedDate())
                 .updatedAt(bookReview.getModifiedDate())
-                .username(bookReview.getMember().getName())
+                .nickname(bookReview.getMember().getNickname())
                 .likesCount(likesCount)
                 .build();
     }

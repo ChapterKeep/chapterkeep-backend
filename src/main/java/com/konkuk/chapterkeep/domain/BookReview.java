@@ -20,6 +20,9 @@ public class BookReview extends BaseTimeEntity {
     @Column(name = "book_review_id")
     private Long bookReviewId;
 
+    @Column(name = "reviewTitle", nullable = false)
+    private String reviewTitle;
+
     @Column(name = "rating", nullable = false)
     private int rating;
 
@@ -43,10 +46,11 @@ public class BookReview extends BaseTimeEntity {
     private Member member;
 
     @Builder
-    private BookReview(Member member, BookInfo bookInfo, int rating, String content, String quotation,
+    private BookReview(Member member, BookInfo bookInfo, String reviewTitle, int rating, String content, String quotation,
                        CoverColor coverColor) {
         this.member = member;
         this.bookInfo = bookInfo;
+        this.reviewTitle = reviewTitle;
         this.rating = rating;
         this.content = content;
         this.quotation = quotation;
@@ -58,7 +62,8 @@ public class BookReview extends BaseTimeEntity {
         }
     }
 
-    public void update(int rating, String quotation, String content, CoverColor coverColor) {
+    public void update(String title, int rating, String quotation, String content, CoverColor coverColor) {
+        this.reviewTitle = title;
         this.rating = rating;
         this.quotation = quotation;
         this.content = content;
@@ -66,10 +71,11 @@ public class BookReview extends BaseTimeEntity {
     }
 
     // 생성 메서드
-    public static BookReview createBookReview(Member member, int rating, String quotation, String content,
+    public static BookReview createBookReview(Member member, String reviewTitle, int rating, String quotation, String content,
                                               CoverColor coverColor, BookInfo bookInfo) {
         return BookReview.builder()
                 .member(member)
+                .reviewTitle(reviewTitle)
                 .rating(rating)
                 .quotation(quotation)
                 .content(content)
