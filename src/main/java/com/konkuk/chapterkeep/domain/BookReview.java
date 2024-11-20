@@ -1,5 +1,7 @@
 package com.konkuk.chapterkeep.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.konkuk.chapterkeep.domain.enums.CoverColor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -32,10 +34,12 @@ public class BookReview extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
+    @JsonIgnore
     private BookInfo bookInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonBackReference
     private Member member;
 
     @Builder
@@ -54,18 +58,26 @@ public class BookReview extends BaseTimeEntity {
         }
     }
 
+    public void update(int rating, String quotation, String content, CoverColor coverColor) {
+        this.rating = rating;
+        this.quotation = quotation;
+        this.content = content;
+        this.coverColor = coverColor;
+    }
+
     // 생성 메서드
-    public static BookReview createBookReview(Member member, int rating, String content, String quotation,
+    public static BookReview createBookReview(Member member, int rating, String quotation, String content,
                                               CoverColor coverColor, BookInfo bookInfo) {
         return BookReview.builder()
                 .member(member)
                 .rating(rating)
-                .content(content)
                 .quotation(quotation)
+                .content(content)
                 .coverColor(coverColor)
                 .bookInfo(bookInfo)
                 .build();
     }
+
 
     // 연관 관계 해제 메서드
     public void removeMember() {

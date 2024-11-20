@@ -1,5 +1,6 @@
 package com.konkuk.chapterkeep.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.konkuk.chapterkeep.domain.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,7 +39,7 @@ public class Member {
     private Role role;
 
     @Column(name = "visibility", nullable = false)
-    private boolean visibility = true;
+    private Boolean visibility = true;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Likes> likes = new ArrayList<>();
@@ -50,12 +51,13 @@ public class Member {
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<BookReview> bookReviews = new ArrayList<>();
 
 
     @Builder
     public Member(String name, String password, String nickname, String introduction,
-                  String profileUrl, Role role, boolean visibility) {
+                  String profileUrl, Role role, Boolean visibility) {
         this.name = name;
         this.password = password;
         this.nickname = nickname;
@@ -66,7 +68,7 @@ public class Member {
     }
 
     public static Member createMember(String name, String password, String nickname, String introduction,
-                                      String profileUrl, Role role, boolean visibility) {
+                                      String profileUrl, Role role, Boolean visibility) {
         return Member.builder()
                 .name(name)
                 .password(password)

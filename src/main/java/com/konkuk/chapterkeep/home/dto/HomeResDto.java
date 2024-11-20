@@ -1,5 +1,7 @@
 package com.konkuk.chapterkeep.home.dto;
 
+import com.konkuk.chapterkeep.bookReview.dto.BookDto;
+import com.konkuk.chapterkeep.bookReview.dto.BookReviewResDto;
 import com.konkuk.chapterkeep.domain.BookReview;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HomeResDto {
-    private List<String> coverImageUrls;
+
+    private List<BookReviewResDto> bookReviews;
 
 }

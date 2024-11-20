@@ -12,13 +12,16 @@ import com.konkuk.chapterkeep.domain.BookInfo;
 import com.konkuk.chapterkeep.domain.BookReview;
 import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.domain.enums.CoverColor;
+import com.konkuk.chapterkeep.home.dto.HomeResDto;
 import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import com.konkuk.chapterkeep.member.service.MemberService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,16 +59,13 @@ public class BookReviewService {
         if (exists) {
             throw new GeneralException(Code.DUPLICATE_REVIEW);
         }
-        System.out.println("중복 리뷰 존재 여부: " + exists);
-        System.out.println("Member ID: " + member.getMemberId());
-        System.out.println("BookInfo ID: " + bookInfo.getBookId());
 
         // BookReview 저장
         BookReview bookReview = BookReview.createBookReview(
                 member,
                 bookReviewReqDto.getRating(),
-                bookReviewReqDto.getDescription(),
-                bookReviewReqDto.getQuote(),
+                bookReviewReqDto.getQuotation(),
+                bookReviewReqDto.getContent(),
                 CoverColor.valueOf(coverColor),
                 bookInfo
         );
@@ -78,18 +78,27 @@ public class BookReviewService {
                         .coverUrl(bookInfo.getCoverUrl())
                         .build())
                 .rating(bookReview.getRating())
-                .quote(bookReview.getQuotation())
-                .description(bookReview.getContent())
+                .quotation(bookReview.getQuotation())
+                .content(bookReview.getContent())
                 .coverColor(bookReview.getCoverColor().name())
                 .build();
     }
 
-    public List<BookReview> getBookReviews() {
+    public HomeResDto getBookReviews() {
         Long memberId = memberService.getCurrentMemberId();
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "멤버를 찾을 수 없습니다: " + memberId));
 
-        return bookReviewRepository.findByMember(member);
+        List<BookReview> bookReviews = bookReviewRepository.findByMember_MemberId(memberId);
+
+        List<BookReviewResDto> bookReviewResDtoList = bookReviews.stream()
+                .map(BookReviewResDto::fromEntity)
+                .toList();
+
+        return HomeResDto.builder()
+                .bookReviews(bookReviewResDtoList)
+                .build();
+
     }
 
     public BookReviewResDto getBookReviewById(Long reviewId) {
@@ -108,26 +117,46 @@ public class BookReviewService {
                 : "#FFFFFF";
 
         return BookReviewResDto.builder()
+                .reviewId(reviewId)
                 .bookInfo(bookInfo)
                 .rating(bookReview.getRating())
-                .quote(bookReview.getQuotation())
-                .description(bookReview.getContent())
+                .quotation(bookReview.getQuotation())
+                .content(bookReview.getContent())
                 .coverColor(coverColor)
+                .createdAt(bookReview.getCreatedDate())
+                .updatedAt(bookReview.getModifiedDate())
                 .build();
     }
 
-    public List<String> getBookCoverImageUrlsByUser(Long userId) {
+    public BookReviewResDto updateBookReview(Long reviewId, BookReviewReqDto bookReviewReqDto) {
 
-        Long memberId = memberService.getCurrentMemberId();
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "멤버를 찾을 수 없습니다: " + memberId));
+        BookReview bookReview = bookReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("Book review not found with id: " + reviewId));
 
-        List<BookReview> bookReviews = bookReviewRepository.findByMember(member);
+        CoverColor coverColor = null;
+        if (bookReviewReqDto.getCoverColor() != null) {
+            try {
+                coverColor = CoverColor.valueOf(bookReviewReqDto.getCoverColor().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid coverColor value: " + bookReviewReqDto.getCoverColor());
+            }
+        }
 
-        // 표지 이미지 URL만 추출
-        return bookReviews.stream()
-                .map(bookReview -> bookReview.getBookInfo().getCoverUrl())
-                .collect(Collectors.toList());
+        bookReview.update(
+                bookReviewReqDto.getRating(),
+                bookReviewReqDto.getQuotation(),
+                bookReviewReqDto.getContent(),
+                coverColor != null ? coverColor : bookReview.getCoverColor()
+        );
+        bookReviewRepository.save(bookReview);
+
+        return BookReviewResDto.fromEntity(bookReview);
     }
 
+    public void deleteBookReview(Long reviewId) {
+
+        BookReview bookReview = bookReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("Book review not found with id: " + reviewId));
+        bookReviewRepository.delete(bookReview);
+    }
 }

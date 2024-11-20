@@ -25,16 +25,22 @@ public class BookReviewController {
             return new DataResponseDto<>(response, Code.OK, "리뷰가 성공적으로 저장되었습니다.");
     }
 
-//    @GetMapping("/reviews")
-//    public ResponseEntity<List<BookReview>> getAllBookReview() {
-//        List<BookReview> bookReviews = bookReviewService.getBookReviews();
-//        return ResponseEntity.ok(bookReviews);
-//    }
-
     @GetMapping("/{reviewId}")
     public DataResponseDto<BookReviewResDto> getBookReview(@PathVariable("reviewId") Long reviewId) {
         BookReviewResDto response = bookReviewService.getBookReviewById(reviewId);
         return new DataResponseDto<>(response, Code.OK, "리뷰 조회 성공");
     }
 
+    @PutMapping("/{reviewId}/update")
+    public DataResponseDto<BookReviewResDto> updateBookReview(@PathVariable("reviewId") Long reviewId,
+                                                              @RequestBody BookReviewReqDto bookReviewReqDto) {
+        BookReviewResDto response = bookReviewService.updateBookReview(reviewId, bookReviewReqDto);
+        return new DataResponseDto<>(response, Code.OK, "리뷰 수정 성공");
+    }
+
+    @DeleteMapping("/{reviewId}/delete")
+    public DataResponseDto<String> deleteBookReview(@PathVariable("reviewId") Long reviewId) {
+        bookReviewService.deleteBookReview(reviewId);
+        return new DataResponseDto<>(Code.OK, "리뷰 삭제 성공");
+    }
 }

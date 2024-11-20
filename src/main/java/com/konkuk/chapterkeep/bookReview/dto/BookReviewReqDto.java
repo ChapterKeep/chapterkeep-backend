@@ -10,8 +10,8 @@ public class BookReviewReqDto {
     private BookDto bookInfo;
 
     private int rating;
-    private String quote;
-    private String description;
+    private String quotation;
+    private String content;
     private String coverColor;
 
 }
