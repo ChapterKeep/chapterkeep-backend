@@ -1,6 +1,6 @@
 package com.konkuk.chapterkeep.member.service;
 
-import com.konkuk.chapterkeep.Image.service.ImageService;
+import com.konkuk.chapterkeep.image.service.ImageService;
 import com.konkuk.chapterkeep.common.response.enums.Code;
 import com.konkuk.chapterkeep.common.response.exception.GeneralException;
 import com.konkuk.chapterkeep.domain.Member;

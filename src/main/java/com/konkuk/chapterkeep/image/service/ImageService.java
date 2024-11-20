@@ -1,4 +1,4 @@
-package com.konkuk.chapterkeep.Image.service;
+package com.konkuk.chapterkeep.image.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.konkuk.chapterkeep.common.file.FileConstant;
