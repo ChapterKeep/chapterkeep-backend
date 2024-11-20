@@ -42,7 +42,7 @@ public enum Code {
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "EU004", "존재하지 않는 회원입니다."),
 
     // 비즈니스 오류 (EBxxx)
-    DUPLICATE_REVIEW(HttpStatus.CONFLICT.value(), "EB001", "이미 해당 도서에 대한 리뷰가 존재합니다.");
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EB001", "해당 리뷰가 존재하지 않습니다.");
 
 
     private final int status;

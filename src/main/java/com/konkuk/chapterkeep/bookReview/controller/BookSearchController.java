@@ -17,7 +17,7 @@ public class BookSearchController {
     private final BookSearchService bookSearchService;
 
     @GetMapping("/book-search")
-    public ResponseEntity<List<BookDto>> searchBooks(@RequestParam("keyword") String keyword) {
+    public ResponseEntity<List<BookDto>> searchBooks(@RequestParam("isbn") String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
             return ResponseEntity.badRequest().body(null);
         }

@@ -22,8 +22,10 @@ public class BookReviewResDto {
     private String coverColor;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String username;
+    private long likesCount;
 
-    public static BookReviewResDto fromEntity(BookReview bookReview) {
+    public static BookReviewResDto fromEntity(BookReview bookReview, long likesCount) {
         return BookReviewResDto.builder()
                 .reviewId(bookReview.getBookReviewId())
                 .bookInfo(BookDto.fromEntity(bookReview.getBookInfo()))
@@ -33,7 +35,10 @@ public class BookReviewResDto {
                 .coverColor(bookReview.getCoverColor().name())
                 .createdAt(bookReview.getCreatedDate())
                 .updatedAt(bookReview.getModifiedDate())
+                .username(bookReview.getMember().getName())
+                .likesCount(likesCount)
                 .build();
     }
+
 
 }

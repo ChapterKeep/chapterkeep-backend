@@ -10,9 +10,11 @@ import com.konkuk.chapterkeep.common.response.enums.Code;
 import com.konkuk.chapterkeep.common.response.exception.GeneralException;
 import com.konkuk.chapterkeep.domain.BookInfo;
 import com.konkuk.chapterkeep.domain.BookReview;
+import com.konkuk.chapterkeep.domain.Likes;
 import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.domain.enums.CoverColor;
 import com.konkuk.chapterkeep.home.dto.HomeResDto;
+import com.konkuk.chapterkeep.likes.repository.LikesRepository;
 import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import com.konkuk.chapterkeep.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class BookReviewService {
     private final BookReviewRepository bookReviewRepository;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final LikesRepository likesRepository;
 
     public BookReviewResDto saveBookReview(BookDto bookDto, BookReviewReqDto bookReviewReqDto) {
 
@@ -53,12 +56,6 @@ public class BookReviewService {
         String coverColor = bookReviewReqDto.getCoverColor() != null
                 ? bookReviewReqDto.getCoverColor().toUpperCase()
                 : "WHITE";
-
-        // 중복 확인
-        boolean exists = bookReviewRepository.existsByMemberAndBookInfo(member, bookInfo);
-        if (exists) {
-            throw new GeneralException(Code.DUPLICATE_REVIEW);
-        }
 
         // BookReview 저장
         BookReview bookReview = BookReview.createBookReview(
@@ -84,24 +81,11 @@ public class BookReviewService {
                 .build();
     }
 
-    public HomeResDto getBookReviews() {
+    public BookReviewResDto getBookReviewById(Long reviewId) {
+
         Long memberId = memberService.getCurrentMemberId();
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "멤버를 찾을 수 없습니다: " + memberId));
-
-        List<BookReview> bookReviews = bookReviewRepository.findByMember_MemberId(memberId);
-
-        List<BookReviewResDto> bookReviewResDtoList = bookReviews.stream()
-                .map(BookReviewResDto::fromEntity)
-                .toList();
-
-        return HomeResDto.builder()
-                .bookReviews(bookReviewResDtoList)
-                .build();
-
-    }
-
-    public BookReviewResDto getBookReviewById(Long reviewId) {
 
         BookReview bookReview = bookReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("Book review not found with id: " + reviewId));
@@ -125,6 +109,8 @@ public class BookReviewService {
                 .coverColor(coverColor)
                 .createdAt(bookReview.getCreatedDate())
                 .updatedAt(bookReview.getModifiedDate())
+                .username(member.getNickname())
+                .likesCount(likesRepository.countByBookReview_BookReviewId(reviewId))
                 .build();
     }
 
@@ -149,8 +135,9 @@ public class BookReviewService {
                 coverColor != null ? coverColor : bookReview.getCoverColor()
         );
         bookReviewRepository.save(bookReview);
+        long likesCount = likesRepository.countByBookReview_BookReviewId(bookReview.getBookReviewId());
 
-        return BookReviewResDto.fromEntity(bookReview);
+        return BookReviewResDto.fromEntity(bookReview, likesCount);
     }
 
     public void deleteBookReview(Long reviewId) {
