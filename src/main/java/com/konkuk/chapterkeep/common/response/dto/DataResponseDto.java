@@ -18,4 +18,9 @@ public class DataResponseDto<T> extends ResponseDto {
         this.data = data;
     }
 
+    public DataResponseDto(Code code, String customMessage) {
+        super(code.getCode(), code.getMessage(customMessage));
+        this.data = null;
+    }
+
 }

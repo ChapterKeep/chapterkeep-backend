@@ -4,9 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import java.util.Optional;
-import java.util.function.Predicate;
-
 @Getter
 @RequiredArgsConstructor
 public enum Code {
@@ -42,9 +39,10 @@ public enum Code {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED.value(), "EU001", "인증되지 않은 사용자입니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED.value(), "EU002", "유효하지 않은 토큰입니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN.value(), "EU003", "접근이 허용되지 않았습니다."),
-    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "EU004", "존재하지 않는 회원입니다.");
+    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "EU004", "존재하지 않는 회원입니다."),
 
     // 비즈니스 오류 (EBxxx)
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EB001", "해당 리뷰가 존재하지 않습니다.");
 
 
     private final int status;
