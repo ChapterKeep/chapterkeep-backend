@@ -28,6 +28,12 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, IOException {
 
+        // JWT 필터 건너뛰도록 설정 (임시)
+        if ("/login".equals(request.getRequestURI())||"/signup".equals(request.getRequestURI())||"/check-nickname".equals(request.getRequestURI())||"/check-id".equals(request.getRequestURI())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             // request 헤더에서 jwt 토큰 추출
             String authorization = request.getHeader("Authorization");
