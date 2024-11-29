@@ -40,11 +40,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
 
-        // JSON 요청인지 확인
-        if (!"application/json".equals(request.getContentType())) {
-            throw new GeneralException(Code.INVALID_INPUT_FORMAT);
-        }
-
         try {
             // ObjectMapper를 사용해 JSON 데이터를 Java 객체로 변환 후 dto에 저장
             ObjectMapper objectMapper = new ObjectMapper();
