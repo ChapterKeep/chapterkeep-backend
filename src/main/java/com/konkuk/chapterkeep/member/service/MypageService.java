@@ -46,7 +46,7 @@ public class MypageService {
                 .build();
     }
 
-    private List<MypagePostListDto> getMyPosts() {
+    public List<MypagePostListDto> getMyPosts() {
         Long memberId = memberService.getCurrentMemberId();
 
         try {
@@ -65,7 +65,7 @@ public class MypageService {
         }
     }
 
-    private List<MypagePostListDto> getCommentedPosts() {
+    public List<MypagePostListDto> getCommentedPosts() {
         Member member = memberService.getCurrentMember();
 
         try {
@@ -86,7 +86,7 @@ public class MypageService {
         }
     }
 
-    private List<MypagePostListDto> getLikedPosts() {
+    public List<MypagePostListDto> getLikedPosts() {
         Member member = memberService.getCurrentMember();
 
         try {
