@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
         @UniqueConstraint(columnNames = {"member_id", "book_review_id"})})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Likes {
+public class Likes extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
