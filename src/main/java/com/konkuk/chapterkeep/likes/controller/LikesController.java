@@ -6,19 +6,23 @@ import com.konkuk.chapterkeep.likes.service.LikesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("book-review")
 public class LikesController {
 
     private final LikesService likesService;
 
-    @PostMapping("/{reviewId}/toggle-like")
-    public DataResponseDto<?> toggleLike(@PathVariable Long reviewId) {
-        likesService.toggleLike(reviewId);
-        return new DataResponseDto<>(Code.OK, "좋아요 상태 변경 성공");
+    @PostMapping("/book-review/{reviewId}/toggle-like")
+    public DataResponseDto<?> bookReviewToggleLike(@PathVariable("reviewId") Long reviewId) {
+        likesService.bookReviewToggleLike(reviewId);
+        return new DataResponseDto<>(Code.OK, "독서 기록 좋아요 상태 변경 성공");
+    }
+
+    @PostMapping("/post/{postId}/toggle-like")
+    public DataResponseDto<?> postToggleLike(@PathVariable("postId") Long postId) {
+        likesService.postToggleLike(postId);
+        return new DataResponseDto<>(Code.OK, "게시글 좋아요 상태 변경 성공");
     }
 }

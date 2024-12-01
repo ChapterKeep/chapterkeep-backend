@@ -42,8 +42,8 @@ public enum Code {
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "EU004", "존재하지 않는 회원입니다."),
 
     // 비즈니스 오류 (EBxxx)
-    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EB001", "해당 리뷰가 존재하지 않습니다.");
-
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EB001", "해당 리뷰가 존재하지 않습니다."),
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EB002", "해당 게시글이 존재하지 않습니다.");
 
     private final int status;
     private final String code;

@@ -80,6 +80,8 @@ public class BookReviewService {
                 .quotation(bookReview.getQuotation())
                 .content(bookReview.getContent())
                 .coverColor(bookReview.getCoverColor().name())
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now())
                 .nickname(member.getNickname())
                 .build();
     }
@@ -112,7 +114,7 @@ public class BookReviewService {
                 .content(bookReview.getContent())
                 .coverColor(coverColor)
                 .createdAt(bookReview.getCreatedDate())
-                .updatedAt(bookReview.getModifiedDate())
+                .modifiedAt(bookReview.getModifiedDate())
                 .nickname(member.getNickname())
                 .likesCount(likesRepository.countByBookReview_BookReviewId(reviewId))
                 .build();
@@ -145,10 +147,12 @@ public class BookReviewService {
         return BookReviewResDto.fromEntity(bookReview, likesCount);
     }
 
+    // TODO : 좋아요 눌린 독서 기록이 삭제되지 않는 오류 - 독서 기록 삭제 이전에 해당 독서 기록에 눌린 좋아요 엔티티 먼저 삭제 (cascade)
+    // 양방향으로 전환 or 독서 기록 삭제 이전에 좋아요 엔티티 먼저 삭제 되도록 코드 상에서 작성
     public void deleteBookReview(Long reviewId) {
-
-        BookReview bookReview = bookReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Book review not found with id: " + reviewId));
-        bookReviewRepository.delete(bookReview);
+        if (likesRepository.existsByBookReview_BookReviewId(reviewId)) {
+            likesRepository.deleteByBookReview_BookReviewId(reviewId);
+        }
+        bookReviewRepository.deleteById(reviewId);
     }
 }

@@ -22,7 +22,7 @@ public class BookReviewResDto {
     private String content;
     private String coverColor;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime modifiedAt;
     private String nickname;
     private long likesCount;
 
@@ -36,7 +36,7 @@ public class BookReviewResDto {
                 .content(bookReview.getContent())
                 .coverColor(bookReview.getCoverColor().name())
                 .createdAt(bookReview.getCreatedDate())
-                .updatedAt(bookReview.getModifiedDate())
+                .modifiedAt(bookReview.getModifiedDate())
                 .nickname(bookReview.getMember().getNickname())
                 .likesCount(likesCount)
                 .build();
