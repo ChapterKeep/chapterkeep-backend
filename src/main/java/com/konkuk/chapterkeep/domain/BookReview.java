@@ -1,5 +1,7 @@
 package com.konkuk.chapterkeep.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.konkuk.chapterkeep.domain.enums.CoverColor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -18,6 +20,9 @@ public class BookReview extends BaseTimeEntity {
     @Column(name = "book_review_id")
     private Long bookReviewId;
 
+    @Column(name = "reviewTitle", nullable = false)
+    private String reviewTitle;
+
     @Column(name = "rating", nullable = false)
     private int rating;
 
@@ -30,27 +35,26 @@ public class BookReview extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private CoverColor coverColor;
 
-    @Column(name = "cover_url")
-    private String coverUrl;
-
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
+    @JsonIgnore
     private BookInfo bookInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonBackReference
     private Member member;
 
     @Builder
-    private BookReview(Member member, int rating, String content, String quotation,
-                       CoverColor coverColor, String coverUrl, BookInfo bookInfo) {
+    private BookReview(Member member, BookInfo bookInfo, String reviewTitle, int rating, String content, String quotation,
+                       CoverColor coverColor) {
         this.member = member;
+        this.bookInfo = bookInfo;
+        this.reviewTitle = reviewTitle;
         this.rating = rating;
         this.content = content;
         this.quotation = quotation;
         this.coverColor = coverColor;
-        this.coverUrl = coverUrl;
-        this.bookInfo = bookInfo;
 
         // 연관관계 설정
         if (member != null) {
@@ -58,19 +62,28 @@ public class BookReview extends BaseTimeEntity {
         }
     }
 
+    public void update(String title, int rating, String quotation, String content, CoverColor coverColor) {
+        this.reviewTitle = title;
+        this.rating = rating;
+        this.quotation = quotation;
+        this.content = content;
+        this.coverColor = coverColor;
+    }
+
     // 생성 메서드
-    public static BookReview createBookReview(Member member, int rating, String content, String quotation,
-                                              String coverUrl, CoverColor coverColor, BookInfo bookInfo) {
+    public static BookReview createBookReview(Member member, String reviewTitle, int rating, String quotation, String content,
+                                              CoverColor coverColor, BookInfo bookInfo) {
         return BookReview.builder()
                 .member(member)
+                .reviewTitle(reviewTitle)
                 .rating(rating)
-                .content(content)
                 .quotation(quotation)
+                .content(content)
                 .coverColor(coverColor)
-                .coverUrl(coverUrl)
                 .bookInfo(bookInfo)
                 .build();
     }
+
 
     // 연관 관계 해제 메서드
     public void removeMember() {

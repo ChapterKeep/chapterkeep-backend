@@ -14,7 +14,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/id-test")  // 임시 로그인 테스트 api
-    public DataResponseDto<Long> idTest() {
+    public DataResponseDto<Long> idTest() {;
         return new DataResponseDto<>(memberService.getCurrentMemberId(), Code.OK,"사용자 고유id 불러오기 성공");
     }
     @GetMapping("/role-test")  // 임시 로그인 테스트 api

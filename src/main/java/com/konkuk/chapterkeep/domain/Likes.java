@@ -2,6 +2,7 @@ package com.konkuk.chapterkeep.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,4 +36,22 @@ public class Likes {
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
+    @Builder
+    private Likes(BookReview bookReview,
+                  Post post, Member member, Comment comment) {
+        this.bookReview = bookReview;
+        this.post = post;
+        this.member = member;
+        this.comment = comment;
+    }
+
+    public static Likes createLikes(BookReview bookReview,
+                                    Post post, Member member, Comment comment) {
+        return Likes.builder()
+                .bookReview(bookReview)
+                .post(post)
+                .member(member)
+                .comment(comment)
+                .build();
+    }
 }
