@@ -30,26 +30,36 @@ public class LikesService {
     TODO : 경우에 따라 분기 처리 할 수 있게 리팩토링
     */
 
-    public void bookReviewToggleLike(Long bookReviewId) {
-
+    public void bookReviewToggleLike(Long reviewId) {
         Long memberId = memberService.getCurrentMemberId();
         Optional<Member> member = memberRepository.findById(memberId);
 
-        BookReview bookReview = bookReviewRepository.findById(bookReviewId)
-                .orElseThrow(() -> new GeneralException(Code.REVIEW_NOT_FOUND));
+        BookReview bookReview = bookReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new GeneralException(Code.REVIEW_NOT_FOUND, "존재하지 않는 독서 기록 : " + reviewId));
 
-        Optional<Likes> existingLike = likesRepository.findByMemberMemberIdAndBookReviewBookReviewId(memberId, bookReviewId);
+        Optional<Likes> existingLike = likesRepository.findByMemberMemberIdAndBookReviewBookReviewId(memberId, reviewId);
 
         if (existingLike.isPresent()) {
-            likesRepository.delete(existingLike.get());
+            try {
+                likesRepository.delete(existingLike.get());
+            } catch (Exception e) {
+                throw new GeneralException(Code.DATABASE_ERROR, "좋아요 삭제 중 오류 발생 : " + e.getMessage());
+            }
         } else {
-            Likes like = Likes.createLikes(
-                    bookReview,
-                    null,
-                    member.orElse(null),null);
-            likesRepository.save(like);
+            try {
+                Likes like = Likes.createLikes(
+                        bookReview,
+                        null,
+                        member.orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "존재하지 않는 회원 : " + memberId)),
+                        null
+                );
+                likesRepository.save(like);
+            } catch (Exception e) {
+                throw new GeneralException(Code.DATABASE_ERROR, "좋아요 저장 중 오류 발생 : " + e.getMessage());
+            }
         }
     }
+
 
     public void postToggleLike(Long postId) {
 

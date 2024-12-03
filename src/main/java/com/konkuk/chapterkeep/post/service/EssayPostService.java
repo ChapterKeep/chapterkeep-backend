@@ -33,14 +33,12 @@ public class EssayPostService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "멤버를 찾을 수 없습니다: " + memberId));
 
-        System.out.println("DTO isAnonymous: " + essayPostReqDto.isAnonymous());
         EssayPost essayPost = EssayPost.createEssayPost(
                 member,
                 essayPostReqDto.getTitle(),
                 essayPostReqDto.isAnonymous(),
                 essayPostReqDto.getContent()
         );
-        System.out.println("EssayPost isAnonymous after creation: " + essayPost.isAnonymous());
         essayPostRepository.save(essayPost);
 
         return EssayPostResDto.builder()
@@ -58,29 +56,49 @@ public class EssayPostService {
     }
 
     public List<EssayPostListResDto> getAllEssayPost() {
-        List<EssayPost> essayPosts = essayPostRepository.findAll();
-        return essayPosts.stream()
-                .map(post -> EssayPostListResDto.builder()
-                        .title(post.getTitle())
-                        .nickname(post.getMember().getNickname())
-                        .likesCount(likesRepository.countByPost_PostId(post.getPostId()))
-                        .build()
-                )
-                .toList();
+
+        try {
+
+            List<EssayPost> essayPosts = essayPostRepository.findAll();
+
+            if (essayPosts.isEmpty()) {
+                throw new GeneralException(Code.NOT_FOUND, "게시글이 존재하지 않음");
+            }
+            return essayPosts.stream()
+                    .map(post -> EssayPostListResDto.builder()
+                            .title(post.getTitle())
+                            .nickname(post.getMember().getNickname())
+                            .likesCount(likesRepository.countByPost_PostId(post.getPostId()))
+                            .build()
+                    )
+                    .toList();
+        } catch (Exception e) {
+            throw new GeneralException(Code.INTERNAL_ERROR, "게시글 데이터 처리 중 오류 발생: " + e.getMessage());
+        }
     }
 
+
     public EssayPostResDto getEssayPost(Long postId) {
+        if (postId == null || postId <= 0) {
+            throw new GeneralException(Code.INVALID_INPUT_VALUE, "유효하지 않은 게시글 ID: " + postId);
+        }
+
         Post post = essayPostRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다. id=" + postId));
-        long likesCount = likesRepository.countByPost_PostId(postId);
-        return EssayPostResDto.fromEntity(post, likesCount);
+                .orElseThrow(() -> new GeneralException(Code.NOT_FOUND, "게시글을 찾을 수 없음: " + postId));
+
+        try {
+            long likesCount = likesRepository.countByPost_PostId(postId);
+            return EssayPostResDto.fromEntity(post, likesCount);
+        } catch (Exception e) {
+            throw new GeneralException(Code.INTERNAL_ERROR, "좋아요 수 계산 중 오류 발생: " + e.getMessage());
+        }
     }
 
 
     public EssayPostResDto updateEssayPost(Long postId, EssayPostReqDto essayPostReqDto) {
 
         EssayPost essayPost = essayPostRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다. id=" + postId));
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없음: " + postId));
 
         if (essayPost != null) {
             essayPost.update(
@@ -107,7 +125,16 @@ public class EssayPostService {
     }
 
     public List<EssayPostListResDto> searchEssayPost(String keyword) {
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new GeneralException(Code.INVALID_INPUT_VALUE, "유효하지 않은 검색어: " + keyword);
+        }
+
         List<EssayPost> posts = essayPostRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+
+        if (posts.isEmpty()) {
+            throw new GeneralException(Code.NOT_FOUND, "해당 검색어에 대한 검색 결과가 존재하지 않음: " + keyword);
+        }
 
         return posts.stream()
                 .map(post -> EssayPostListResDto.builder()
@@ -117,5 +144,6 @@ public class EssayPostService {
                         .build())
                 .toList();
     }
+
 
 }

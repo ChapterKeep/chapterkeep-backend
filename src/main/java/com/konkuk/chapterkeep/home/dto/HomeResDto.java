@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class HomeResDto {
 
-    private List<BookReviewResDto> bookReviews;
+    private List<BookShelfResDto> bookShelfResDtoList;
+    private ProfileResDto profileResDto;
 
 }

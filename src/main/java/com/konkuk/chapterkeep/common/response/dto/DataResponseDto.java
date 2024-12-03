@@ -1,9 +1,11 @@
 package com.konkuk.chapterkeep.common.response.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.konkuk.chapterkeep.common.response.enums.Code;
 import lombok.Getter;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DataResponseDto<T> extends ResponseDto {
 
     private final T data;

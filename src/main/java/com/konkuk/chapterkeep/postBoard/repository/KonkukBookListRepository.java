@@ -1,4 +1,4 @@
-package com.konkuk.chapterkeep.bookRecommend.repository;
+package com.konkuk.chapterkeep.postBoard.repository;
 
 import com.konkuk.chapterkeep.domain.KonkukBookList;
 import org.springframework.data.jpa.repository.JpaRepository;
