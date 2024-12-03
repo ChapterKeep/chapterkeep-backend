@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EssayPostReqDto {
+public class EssayPostListResDto {
 
     private String title;
-    private boolean anonymous;
-    private String content;
-
+    private String nickname;
+    private long likesCount;
 }

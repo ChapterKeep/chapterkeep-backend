@@ -28,7 +28,7 @@ public class Post extends BaseTimeEntity {
     private String title;
 
     @Column(name = "is_anonymous")
-    private Boolean isAnonymous;
+    private boolean isAnonymous;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -37,7 +37,7 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    protected Post(Member member, String title, Boolean isAnonymous) {
+    protected Post(Member member, String title, boolean isAnonymous) {
         this.member = member;
         this.title = title;
         this.isAnonymous = isAnonymous;
@@ -51,7 +51,7 @@ public class Post extends BaseTimeEntity {
         }
     }
 
-    public void update(String title, Boolean isAnonymous) {
+    public void update(String title, boolean isAnonymous) {
         this.title = title;
         this.isAnonymous = isAnonymous;
     }
