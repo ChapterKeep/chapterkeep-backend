@@ -2,6 +2,8 @@ package com.konkuk.chapterkeep.home.service;
 
 import com.konkuk.chapterkeep.bookReview.dto.BookReviewResDto;
 import com.konkuk.chapterkeep.bookReview.repository.BookReviewRepository;
+import com.konkuk.chapterkeep.common.response.enums.Code;
+import com.konkuk.chapterkeep.common.response.exception.GeneralException;
 import com.konkuk.chapterkeep.domain.BookReview;
 import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.home.dto.HomeResDto;
@@ -41,12 +43,19 @@ public class HomeService {
     public ProfileResDto getProfile(){
         Member member = memberService.getCurrentMember();
 
-        return ProfileResDto.builder()
-                .nickname(member.getNickname())
-                .introduction(member.getIntroduction())
-                .profileUrl(member.getProfileUrl())
-                .visibility(member.getVisibility())
-                .postCount((long) member.getPosts().size())
-                .build();
+        ProfileResDto response;
+        try {
+            response = ProfileResDto.builder()
+                    .nickname(member.getNickname())
+                    .introduction(member.getIntroduction())
+                    .profileUrl(member.getProfileUrl())
+                    .visibility(member.getVisibility())
+                    .postCount((long) member.getPosts().size())
+                    .build();
+        } catch (Exception e){
+            throw new GeneralException(Code.INTERNAL_ERROR,"프로필 정보를 가져오는 도중 오류가 발생했습니다.");
+        }
+
+        return response;
     }
 }
