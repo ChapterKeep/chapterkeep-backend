@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EssayPostReqDto {
 
-    private String title;
+    private String postTitle;
     private boolean anonymous;
     private String content;
 

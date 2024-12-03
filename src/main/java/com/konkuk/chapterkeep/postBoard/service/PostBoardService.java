@@ -78,7 +78,7 @@ public class PostBoardService {
                     .map(post -> MostLikedEssayPostResDto.builder()
                             .profileUrl(post.getMember().getProfileUrl())
                             .nickname(post.getMember().getNickname())
-                            .title(post.getTitle())
+                            .postTitle(post.getTitle())
                             .anonymous(post.isAnonymous())
                             .likesCount(likesRepository.countByPost_PostId(post.getPostId()))
                             .build()
