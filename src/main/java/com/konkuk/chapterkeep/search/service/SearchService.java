@@ -47,9 +47,6 @@ public class SearchService {
     public SearchBookShelfResDto getBookShelfByNickName(String nickname) {
 
         List<Member> members = memberRepository.findByNicknameContaining(nickname);
-        List<Long> memberIds = members.stream()
-                .map(Member::getMemberId)
-                .toList();
         List<ShelfInfoDto> result = members.stream()
                 .map(member -> {
 

@@ -147,8 +147,7 @@ public class BookReviewService {
         return BookReviewResDto.fromEntity(bookReview, likesCount);
     }
 
-    // TODO : 좋아요 눌린 독서 기록이 삭제되지 않는 오류 - 독서 기록 삭제 이전에 해당 독서 기록에 눌린 좋아요 엔티티 먼저 삭제 (cascade)
-    // 양방향으로 전환 or 독서 기록 삭제 이전에 좋아요 엔티티 먼저 삭제 되도록 코드 상에서 작성
+    @Transactional
     public void deleteBookReview(Long reviewId) {
         if (likesRepository.existsByBookReview_BookReviewId(reviewId)) {
             likesRepository.deleteByBookReview_BookReviewId(reviewId);

@@ -1,10 +1,7 @@
 package com.konkuk.chapterkeep.post.dto;
 
-import com.konkuk.chapterkeep.bookReview.dto.BookDto;
-import com.konkuk.chapterkeep.bookReview.dto.BookReviewResDto;
-import com.konkuk.chapterkeep.domain.BookReview;
 import com.konkuk.chapterkeep.domain.Post;
-import com.konkuk.chapterkeep.domain.posts.EssayContestPost;
+import com.konkuk.chapterkeep.domain.posts.EssayPost;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,9 +10,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class EssayPostResDto {
 
     private Long memberId;
@@ -23,7 +20,7 @@ public class EssayPostResDto {
     private String profileUrl;
     private Long postId;
     private String title;
-    private boolean isAnonymous;
+    private boolean anonymous;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -31,18 +28,18 @@ public class EssayPostResDto {
 
     public static EssayPostResDto fromEntity(Post post, long likesCount) {
 
-        EssayContestPost essayContestPost = (EssayContestPost) post;
+        EssayPost essayPost = (EssayPost) post;
 
         return EssayPostResDto.builder()
-                .memberId(essayContestPost.getMember() != null ? essayContestPost.getMember().getMemberId() : null)
-                .nickname(essayContestPost.getMember() != null ? essayContestPost.getMember().getNickname() : null)
-                .profileUrl(essayContestPost.getMember() != null ? essayContestPost.getMember().getProfileUrl() : null)
-                .postId(essayContestPost.getPostId())
-                .title(essayContestPost.getTitle())
-                .isAnonymous(essayContestPost.getIsAnonymous())
-                .content(essayContestPost.getContent())
-                .createdAt(essayContestPost.getCreatedDate())
-                .modifiedAt(essayContestPost.getModifiedDate())
+                .memberId(essayPost.getMember() != null ? essayPost.getMember().getMemberId() : null)
+                .nickname(essayPost.getMember() != null ? essayPost.getMember().getNickname() : null)
+                .profileUrl(essayPost.getMember() != null ? essayPost.getMember().getProfileUrl() : null)
+                .postId(essayPost.getPostId())
+                .title(essayPost.getTitle())
+                .anonymous(essayPost.isAnonymous())
+                .content(essayPost.getContent())
+                .createdAt(essayPost.getCreatedDate())
+                .modifiedAt(essayPost.getModifiedDate())
                 .likesCount(likesCount)
                 .build();
     }
