@@ -19,7 +19,7 @@ public class EssayPostResDto {
     private String nickname;
     private String profileUrl;
     private Long postId;
-    private String title;
+    private String postTitle;
     private boolean anonymous;
     private String content;
     private LocalDateTime createdAt;
@@ -35,7 +35,7 @@ public class EssayPostResDto {
                 .nickname(essayPost.getMember() != null ? essayPost.getMember().getNickname() : null)
                 .profileUrl(essayPost.getMember() != null ? essayPost.getMember().getProfileUrl() : null)
                 .postId(essayPost.getPostId())
-                .title(essayPost.getTitle())
+                .postTitle(essayPost.getTitle())
                 .anonymous(essayPost.isAnonymous())
                 .content(essayPost.getContent())
                 .createdAt(essayPost.getCreatedDate())

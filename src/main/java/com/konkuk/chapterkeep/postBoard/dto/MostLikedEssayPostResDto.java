@@ -10,7 +10,7 @@ public class MostLikedEssayPostResDto {
     private String nickname;
     private String profileUrl;
     private boolean anonymous;
-    private String title;
+    private String postTitle;
     private long likesCount;
 
 }

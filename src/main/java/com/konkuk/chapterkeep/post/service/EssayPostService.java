@@ -35,7 +35,7 @@ public class EssayPostService {
 
         EssayPost essayPost = EssayPost.createEssayPost(
                 member,
-                essayPostReqDto.getTitle(),
+                essayPostReqDto.getPostTitle(),
                 essayPostReqDto.isAnonymous(),
                 essayPostReqDto.getContent()
         );
@@ -46,7 +46,7 @@ public class EssayPostService {
                 .nickname(member.getNickname())
                 .profileUrl(member.getProfileUrl())
                 .postId(essayPost.getPostId())
-                .title(essayPost.getTitle())
+                .postTitle(essayPost.getTitle())
                 .anonymous(essayPost.isAnonymous())
                 .content(essayPost.getContent())
                 .createdAt(essayPost.getCreatedDate())
@@ -66,7 +66,7 @@ public class EssayPostService {
             }
             return essayPosts.stream()
                     .map(post -> EssayPostListResDto.builder()
-                            .title(post.getTitle())
+                            .postTitle(post.getTitle())
                             .nickname(post.getMember().getNickname())
                             .likesCount(likesRepository.countByPost_PostId(post.getPostId()))
                             .build()
@@ -102,7 +102,7 @@ public class EssayPostService {
 
         if (essayPost != null) {
             essayPost.update(
-                    essayPostReqDto.getTitle(),
+                    essayPostReqDto.getPostTitle(),
                     essayPostReqDto.isAnonymous(),
                     essayPostReqDto.getContent()
             );
@@ -138,7 +138,7 @@ public class EssayPostService {
 
         return posts.stream()
                 .map(post -> EssayPostListResDto.builder()
-                        .title(post.getTitle())
+                        .postTitle(post.getTitle())
                         .nickname(post.getMember().getNickname())
                         .likesCount(likesRepository.countByPost_PostId(post.getPostId()))
                         .build())

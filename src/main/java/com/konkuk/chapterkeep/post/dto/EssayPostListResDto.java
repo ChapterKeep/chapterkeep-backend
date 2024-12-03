@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EssayPostListResDto {
 
-    private String title;
+    private String postTitle;
     private String nickname;
     private long likesCount;
 }

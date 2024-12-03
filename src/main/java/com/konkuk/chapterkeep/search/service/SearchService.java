@@ -34,7 +34,7 @@ public class SearchService {
         List<SearchBookReviewResDto> result = bookInfoList.stream()
                 .flatMap(bookInfo -> bookReviewRepository.findByBookInfo_BookId(bookInfo.getBookId()).stream()
                         .map(bookReview -> SearchBookReviewResDto.builder()
-                                .title(bookInfo.getTitle())
+                                .reviewTitle(bookReview.getReviewTitle())
                                 .coverUrl(bookInfo.getCoverUrl())
                                 .nickname(bookReview.getMember().getNickname())
                                 .build()
