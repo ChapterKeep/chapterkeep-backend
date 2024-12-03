@@ -40,11 +40,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
 
-        // JSON 요청인지 확인
-        if (!"application/json".equals(request.getContentType())) {
-            throw new GeneralException(Code.INVALID_INPUT_FORMAT);
-        }
-
         try {
             // ObjectMapper를 사용해 JSON 데이터를 Java 객체로 변환 후 dto에 저장
             ObjectMapper objectMapper = new ObjectMapper();
@@ -83,7 +78,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
         // 추출한 username 과 role을 기반으로 JWT 토큰 생성
-        String token = jwtUtil.createJwt(username, role, 60 * 60 * 10 * 1000L); // 인자 : username, role, 유효시간(36,000초인 10시간으로 지정)
+        String token = jwtUtil.createJwt(username, role, 90L * 24 * 60 * 60 * 1000); // 90일로 유효시간 변경
 
         // jwt 토큰을 응답 헤더에 담기
         response.addHeader("Authorization","Bearer " + token); // ex) 'Authorization: Bearer 인증토큰'

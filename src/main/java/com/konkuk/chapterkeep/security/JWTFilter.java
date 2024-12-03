@@ -28,6 +28,7 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, IOException {
 
+
         try {
             // request 헤더에서 jwt 토큰 추출
             String authorization = request.getHeader("Authorization");
