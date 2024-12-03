@@ -1,4 +1,4 @@
-package com.konkuk.chapterkeep.post.dto;
+package com.konkuk.chapterkeep.bookRecommend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EssayPostReqDto {
+public class BookReviewRecommendResDto {
 
     private String title;
-    private boolean anonymous;
-    private String content;
+    private String writer;
+    private String cover_url;
 
 }

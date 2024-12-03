@@ -4,16 +4,19 @@ import com.konkuk.chapterkeep.common.response.enums.Code;
 import com.konkuk.chapterkeep.common.response.exception.GeneralException;
 import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.domain.Post;
-import com.konkuk.chapterkeep.domain.posts.EssayContestPost;
+import com.konkuk.chapterkeep.domain.posts.EssayPost;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
 import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import com.konkuk.chapterkeep.member.service.MemberService;
+import com.konkuk.chapterkeep.post.dto.EssayPostListResDto;
 import com.konkuk.chapterkeep.post.dto.EssayPostReqDto;
 import com.konkuk.chapterkeep.post.dto.EssayPostResDto;
-import com.konkuk.chapterkeep.post.repository.PostRepository;
+import com.konkuk.chapterkeep.post.repository.EssayPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,44 +25,65 @@ public class EssayPostService {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final LikesRepository likesRepository;
-    private final PostRepository postRepository;
+    private final EssayPostRepository essayPostRepository;
 
-    public EssayPostResDto createPost(EssayPostReqDto essayPostReqDto) {
+    public EssayPostResDto createEssayPost(EssayPostReqDto essayPostReqDto) {
 
         Long memberId = memberService.getCurrentMemberId();
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "멤버를 찾을 수 없습니다: " + memberId));
 
-        EssayContestPost essayContestPost = EssayContestPost.createEssayPost(
+        System.out.println("DTO isAnonymous: " + essayPostReqDto.isAnonymous());
+        EssayPost essayPost = EssayPost.createEssayPost(
                 member,
                 essayPostReqDto.getTitle(),
                 essayPostReqDto.isAnonymous(),
                 essayPostReqDto.getContent()
         );
-        postRepository.save(essayContestPost);
+        System.out.println("EssayPost isAnonymous after creation: " + essayPost.isAnonymous());
+        essayPostRepository.save(essayPost);
 
         return EssayPostResDto.builder()
                 .memberId(memberId)
                 .nickname(member.getNickname())
                 .profileUrl(member.getProfileUrl())
-                .postId(essayContestPost.getPostId())
-                .title(essayContestPost.getTitle())
-                .isAnonymous(essayContestPost.getIsAnonymous())
-                .content(essayContestPost.getContent())
-                .createdAt(essayContestPost.getCreatedDate())
-                .modifiedAt(essayContestPost.getModifiedDate())
-                .likesCount(likesRepository.countByPost_PostId(essayContestPost.getPostId()))
+                .postId(essayPost.getPostId())
+                .title(essayPost.getTitle())
+                .anonymous(essayPost.isAnonymous())
+                .content(essayPost.getContent())
+                .createdAt(essayPost.getCreatedDate())
+                .modifiedAt(essayPost.getModifiedDate())
+                .likesCount(likesRepository.countByPost_PostId(essayPost.getPostId()))
                 .build();
     }
 
-    @Transactional
+    public List<EssayPostListResDto> getAllEssayPost() {
+        List<EssayPost> essayPosts = essayPostRepository.findAll();
+        return essayPosts.stream()
+                .map(post -> EssayPostListResDto.builder()
+                        .title(post.getTitle())
+                        .nickname(post.getMember().getNickname())
+                        .likesCount(likesRepository.countByPost_PostId(post.getPostId()))
+                        .build()
+                )
+                .toList();
+    }
+
+    public EssayPostResDto getEssayPost(Long postId) {
+        Post post = essayPostRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다. id=" + postId));
+        long likesCount = likesRepository.countByPost_PostId(postId);
+        return EssayPostResDto.fromEntity(post, likesCount);
+    }
+
+
     public EssayPostResDto updateEssayPost(Long postId, EssayPostReqDto essayPostReqDto) {
 
-        Post post = postRepository.findById(postId)
+        EssayPost essayPost = essayPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다. id=" + postId));
 
-        if (post instanceof EssayContestPost) {
-            ((EssayContestPost) post).update(
+        if (essayPost != null) {
+            essayPost.update(
                     essayPostReqDto.getTitle(),
                     essayPostReqDto.isAnonymous(),
                     essayPostReqDto.getContent()
@@ -68,19 +92,30 @@ public class EssayPostService {
             throw new IllegalArgumentException("해당 게시글은 에세이 게시글이 아닙니다.");
         }
 
-        postRepository.save(post);
+        essayPostRepository.save(essayPost);
         long likesCount = likesRepository.countByPost_PostId(postId);
 
-        return EssayPostResDto.fromEntity(post, likesCount);
+        return EssayPostResDto.fromEntity(essayPost, likesCount);
     }
 
-    // TODO : 좋아요 눌린 독서 기록이 삭제되지 않는 오류 - 독서 기록 삭제 이전에 해당 독서 기록에 눌린 좋아요 엔티티 먼저 삭제 (cascade)
-    // 양방향으로 전환 or 독서 기록 삭제 이전에 좋아요 엔티티 먼저 삭제 되도록 코드 상에서 작성
+    @Transactional
     public void deletePost(Long postId) {
         if (likesRepository.existsByPost_PostId(postId)) {
             likesRepository.deleteByPost_PostId(postId);
         }
-        postRepository.deleteById(postId);
+        essayPostRepository.deleteById(postId);
+    }
+
+    public List<EssayPostListResDto> searchEssayPost(String keyword) {
+        List<EssayPost> posts = essayPostRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+
+        return posts.stream()
+                .map(post -> EssayPostListResDto.builder()
+                        .title(post.getTitle())
+                        .nickname(post.getMember().getNickname())
+                        .likesCount(likesRepository.countByPost_PostId(post.getPostId()))
+                        .build())
+                .toList();
     }
 
 }

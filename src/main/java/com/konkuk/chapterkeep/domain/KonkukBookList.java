@@ -16,11 +16,8 @@ public class KonkukBookList {
     @Column(name = "konkuk_book_list_id")
     private Long konkukBookListId;
 
-    @Column(name = "title", nullable = false, length = 35)
+    @Column(name = "title", nullable = false, length = 100)
     private String title;
-
-    @Column(name = "writer", nullable = false, length = 20)
-    private String writer;
 
     @Column(name = "department", nullable = false, length = 25)
     private String department;

@@ -2,7 +2,9 @@ package com.konkuk.chapterkeep.likes.repository;
 
 import com.konkuk.chapterkeep.domain.Likes;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LikesRepository extends JpaRepository<Likes, Long> {
@@ -14,5 +16,11 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
     Optional<Likes> findByMemberMemberIdAndPostPostId(Long memberId, Long postId);
     long countByBookReview_BookReviewId(Long bookReviewId);
     long countByPost_PostId(Long postId);
+
+    @Query("SELECT l.post.postId " +
+            "FROM Likes l " +
+            "GROUP BY l.post.postId " +
+            "ORDER BY COUNT(l.post.postId) DESC")
+    List<Long> findTop3PostIdsByLikesCount();
 }
 
