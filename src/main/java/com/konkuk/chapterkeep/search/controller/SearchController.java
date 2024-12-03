@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/search")
@@ -19,14 +21,14 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping("/book-review")
-    public DataResponseDto<SearchBookReviewResDto> searchBookReviews(@RequestParam("title") String title) {
-        SearchBookReviewResDto response = searchService.getReviewsByTitle(title);
+    public DataResponseDto<List<SearchBookReviewResDto>> searchBookReviews(@RequestParam("title") String title) {
+        List<SearchBookReviewResDto> response = searchService.getReviewsByTitle(title);
         return new DataResponseDto<>(response, Code.OK, "검색 성공");
     }
 
     @GetMapping("/book-shelf")
-    public DataResponseDto<SearchBookShelfResDto> searchBookSelf(@RequestParam("nickname") String nickname) {
-        SearchBookShelfResDto response = searchService.getBookShelfByNickName(nickname);
+    public DataResponseDto<List<SearchBookShelfResDto>> searchBookSelf(@RequestParam("nickname") String nickname) {
+        List<SearchBookShelfResDto> response = searchService.getBookShelfByNickName(nickname);
         return new DataResponseDto<>(response, Code.OK, "검색 성공");
     }
 }

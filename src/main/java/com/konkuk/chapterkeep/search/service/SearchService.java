@@ -1,16 +1,14 @@
 package com.konkuk.chapterkeep.search.service;
 
 import com.konkuk.chapterkeep.bookInfo.repository.BookInfoRepository;
-import com.konkuk.chapterkeep.bookReview.dto.BookReviewResDto;
 import com.konkuk.chapterkeep.bookReview.repository.BookReviewRepository;
+import com.konkuk.chapterkeep.common.response.enums.Code;
+import com.konkuk.chapterkeep.common.response.exception.GeneralException;
 import com.konkuk.chapterkeep.domain.BookInfo;
-import com.konkuk.chapterkeep.domain.BookReview;
 import com.konkuk.chapterkeep.domain.Member;
-import com.konkuk.chapterkeep.likes.repository.LikesRepository;
 import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import com.konkuk.chapterkeep.search.dto.SearchBookReviewResDto;
 import com.konkuk.chapterkeep.search.dto.SearchBookShelfResDto;
-import com.konkuk.chapterkeep.search.dto.ShelfInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,45 +21,54 @@ public class SearchService {
 
     private final BookReviewRepository bookReviewRepository;
     private final BookInfoRepository bookInfoRepository;
-    private final LikesRepository likesRepository;
     private final MemberRepository memberRepository;
 
-    public SearchBookReviewResDto getReviewsByTitle(String title) {
+    public List<SearchBookReviewResDto> getReviewsByTitle(String title) {
+
+        if (title == null || title.trim().isEmpty()) {
+            throw new GeneralException(Code.BAD_REQUEST, "유효하지 않은 검색어");
+        }
 
         List<BookInfo> bookInfoList = bookInfoRepository.findByTitleContaining(title);
-        List<Long> bookIds = bookInfoList.stream()
-                .map(BookInfo::getBookId)
-                .toList();
-        List<BookReview> allBookReviews = bookIds.stream()
-                .flatMap(bookId -> bookReviewRepository.findByBookInfo_BookId(bookId).stream())
-                .toList();
-        List<BookReviewResDto> result = allBookReviews.stream()
-                .map(bookReview -> BookReviewResDto.fromEntity(bookReview, likesRepository.countByBookReview_BookReviewId(bookReview.getBookReviewId())))
-                .collect(Collectors.toList());
 
-        return SearchBookReviewResDto.builder()
-                .bookReviews(result)
-                .build();
+        List<SearchBookReviewResDto> result = bookInfoList.stream()
+                .flatMap(bookInfo -> bookReviewRepository.findByBookInfo_BookId(bookInfo.getBookId()).stream()
+                        .map(bookReview -> SearchBookReviewResDto.builder()
+                                .title(bookInfo.getTitle())
+                                .coverUrl(bookInfo.getCoverUrl())
+                                .nickname(bookReview.getMember().getNickname())
+                                .build()
+                        )
+                )
+                .toList();
+
+        if (result.isEmpty()) {
+            throw new GeneralException(Code.NOT_FOUND, "해당 검색어에 대한 검색 결과가 존재하지 않음 : " + title);
+        }
+
+        return result;
     }
 
-    public SearchBookShelfResDto getBookShelfByNickName(String nickname) {
+    public List<SearchBookShelfResDto> getBookShelfByNickName(String nickname) {
+        if (nickname == null || nickname.trim().isEmpty()) {
+            throw new GeneralException(Code.INVALID_INPUT_VALUE, "유효하지 않은 검색어");
+        }
 
         List<Member> members = memberRepository.findByNicknameContaining(nickname);
-        List<ShelfInfoDto> result = members.stream()
+
+        if (members.isEmpty()) {
+            throw new GeneralException(Code.NOT_FOUND, "해당 검색어에 대한 검색 결과가 존재하지 않음 : " + nickname);
+        }
+
+        return members.stream()
                 .map(member -> {
-
                     long bookReviewCount = bookReviewRepository.countByMember_MemberId(member.getMemberId());
-
-                    return new ShelfInfoDto(
-                            member.getNickname(),
-                            member.getProfileUrl(),
-                            bookReviewCount
-                    );
+                    return SearchBookShelfResDto.builder()
+                            .nickname(member.getNickname())
+                            .profileUrl(member.getProfileUrl())
+                            .bookReviewCount(bookReviewCount)
+                            .build();
                 })
-                .collect(Collectors.toList());
-
-        return SearchBookShelfResDto.builder()
-                .shelfInfoList(result)
-                .build();
+                .toList();
     }
 }

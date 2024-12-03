@@ -2,18 +2,14 @@ package com.konkuk.chapterkeep.bookReview.service;
 
 
 import com.konkuk.chapterkeep.bookInfo.repository.BookInfoRepository;
-import com.konkuk.chapterkeep.bookReview.dto.BookDto;
-import com.konkuk.chapterkeep.bookReview.dto.BookReviewReqDto;
-import com.konkuk.chapterkeep.bookReview.dto.BookReviewResDto;
+import com.konkuk.chapterkeep.bookReview.dto.*;
 import com.konkuk.chapterkeep.bookReview.repository.BookReviewRepository;
 import com.konkuk.chapterkeep.common.response.enums.Code;
 import com.konkuk.chapterkeep.common.response.exception.GeneralException;
 import com.konkuk.chapterkeep.domain.BookInfo;
 import com.konkuk.chapterkeep.domain.BookReview;
-import com.konkuk.chapterkeep.domain.Likes;
 import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.domain.enums.CoverColor;
-import com.konkuk.chapterkeep.home.dto.HomeResDto;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
 import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import com.konkuk.chapterkeep.member.service.MemberService;
@@ -22,9 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,11 +29,11 @@ public class BookReviewService {
     private final MemberRepository memberRepository;
     private final LikesRepository likesRepository;
 
-    public BookReviewResDto saveBookReview(BookDto bookDto, BookReviewReqDto bookReviewReqDto) {
+    public BookReviewCreateResDto saveBookReview(BookDto bookDto, BookReviewReqDto bookReviewReqDto) {
 
         Long memberId = memberService.getCurrentMemberId();
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "멤버를 찾을 수 없습니다: " + memberId));
+                .orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "존재하지 않는 회원 : " + memberId));
 
         // BookInfo 저장 또는 중복 체크
         BookInfo bookInfo = bookInfoRepository.findByTitleAndWriter(bookDto.getTitle(), bookDto.getWriter())
@@ -69,20 +62,9 @@ public class BookReviewService {
         );
         bookReviewRepository.save(bookReview);
 
-        return BookReviewResDto.builder()
-                .bookInfo(BookDto.builder()
-                        .title(bookInfo.getTitle())
-                        .writer(bookInfo.getWriter())
-                        .coverUrl(bookInfo.getCoverUrl())
-                        .build())
-                .reviewTitle(bookReview.getReviewTitle())
-                .rating(bookReview.getRating())
-                .quotation(bookReview.getQuotation())
-                .content(bookReview.getContent())
-                .coverColor(bookReview.getCoverColor().name())
-                .createdAt(LocalDateTime.now())
-                .modifiedAt(LocalDateTime.now())
-                .nickname(member.getNickname())
+        return BookReviewCreateResDto.builder()
+                .reviewId(bookReview.getBookReviewId())
+                .createdAt(bookReview.getCreatedDate())
                 .build();
     }
 
@@ -90,10 +72,10 @@ public class BookReviewService {
 
         Long memberId = memberService.getCurrentMemberId();
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "멤버를 찾을 수 없습니다: " + memberId));
+                .orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "존재하지 않는 회원 : " + memberId));
 
         BookReview bookReview = bookReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Book review not found with id: " + reviewId));
+                .orElseThrow(() -> new GeneralException(Code.REVIEW_NOT_FOUND, "존재하지 않는 독서기록 : " + reviewId));
 
         BookDto bookInfo = BookDto.builder()
                 .title(bookReview.getBookInfo().getTitle())
@@ -106,8 +88,8 @@ public class BookReviewService {
                 : "#FFFFFF";
 
         return BookReviewResDto.builder()
-                .reviewId(reviewId)
                 .bookInfo(bookInfo)
+                .reviewId(bookReview.getBookReviewId())
                 .reviewTitle(bookReview.getReviewTitle())
                 .rating(bookReview.getRating())
                 .quotation(bookReview.getQuotation())
@@ -120,17 +102,17 @@ public class BookReviewService {
                 .build();
     }
 
-    public BookReviewResDto updateBookReview(Long reviewId, BookReviewReqDto bookReviewReqDto) {
+    public BookReviewUpdateResDto updateBookReview(Long reviewId, BookReviewReqDto bookReviewReqDto) {
 
         BookReview bookReview = bookReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Book review not found with id: " + reviewId));
+                .orElseThrow(() -> new GeneralException(Code.REVIEW_NOT_FOUND, "존재하지 않는 독서기록 : " + reviewId));
 
         CoverColor coverColor = null;
         if (bookReviewReqDto.getCoverColor() != null) {
             try {
                 coverColor = CoverColor.valueOf(bookReviewReqDto.getCoverColor().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Invalid coverColor value: " + bookReviewReqDto.getCoverColor());
+            } catch (GeneralException e) {
+                throw new GeneralException(Code.INVALID_INPUT_VALUE, "유효하지 않은 컬러 값 : " + bookReviewReqDto.getCoverColor());
             }
         }
 
@@ -142,16 +124,30 @@ public class BookReviewService {
                 coverColor != null ? coverColor : bookReview.getCoverColor()
         );
         bookReviewRepository.save(bookReview);
-        long likesCount = likesRepository.countByBookReview_BookReviewId(bookReview.getBookReviewId());
 
-        return BookReviewResDto.fromEntity(bookReview, likesCount);
+        return BookReviewUpdateResDto.builder()
+                .reviewId(bookReview.getBookReviewId())
+                .modifiedAt(bookReview.getModifiedDate())
+                .build();
     }
 
     @Transactional
     public void deleteBookReview(Long reviewId) {
-        if (likesRepository.existsByBookReview_BookReviewId(reviewId)) {
-            likesRepository.deleteByBookReview_BookReviewId(reviewId);
+        if (!bookReviewRepository.existsById(reviewId)) {
+            throw new GeneralException(Code.REVIEW_NOT_FOUND, "존재하지 않는 독서 기록 : " + reviewId);
         }
-        bookReviewRepository.deleteById(reviewId);
+
+        if (likesRepository.existsByBookReview_BookReviewId(reviewId)) {
+            try {
+                likesRepository.deleteByBookReview_BookReviewId(reviewId);
+            } catch (Exception e) {
+                throw new GeneralException(Code.DATABASE_ERROR, "좋아요 데이터 삭제 중 오류 발생 : " + e.getMessage());
+            }
+        }
+        try {
+            bookReviewRepository.deleteById(reviewId);
+        } catch (Exception e) {
+            throw new GeneralException(Code.DATABASE_ERROR, "독서 기록 삭제 중 오류 발생 : " + e.getMessage());
+        }
     }
 }

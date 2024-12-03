@@ -1,4 +1,4 @@
-package com.konkuk.chapterkeep.bookRecommend.dto;
+package com.konkuk.chapterkeep.postBoard.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

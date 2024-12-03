@@ -45,7 +45,7 @@ public class EssayPostController {
     @DeleteMapping("/{postId}/delete")
     public DataResponseDto<EssayPostResDto> deleteEssayPost(@PathVariable Long postId) {
         essayPostService.deletePost(postId);
-        return new DataResponseDto<>(Code.OK, "백일장 게시글 삭제 성공");
+        return new DataResponseDto<>(null, Code.OK, "백일장 게시글 삭제 성공");
     }
 
     @GetMapping("/search")

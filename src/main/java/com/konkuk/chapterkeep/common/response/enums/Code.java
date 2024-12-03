@@ -16,7 +16,7 @@ public enum Code {
      */
 
     // 성공 응답 (Sxxx)
-    OK( HttpStatus.OK.value(),"S001", "요청이 성공하였습니다."),
+    OK(HttpStatus.OK.value(),"S001", "요청이 성공하였습니다."),
 
     // 클라이언트 오류 (ECxxx)
     BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "EC001", "잘못된 요청입니다."),
@@ -33,6 +33,7 @@ public enum Code {
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES001", "예기치 못한 서버 에러가 발생했습니다."),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES002", "데이터베이스 처리 중 오류가 발생했습니다."),
     FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES003", "파일 업로드 중 오류가 발생했습니다."),
+    EXTERNAL_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ES004", "외부 API 호출 중 오류가 발생했습니다."),
 
 
     // 인증,인가 오류 (EUxxx)
@@ -42,7 +43,7 @@ public enum Code {
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "EU004", "존재하지 않는 회원입니다."),
 
     // 비즈니스 오류 (EBxxx)
-    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EB001", "해당 리뷰가 존재하지 않습니다."),
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EB001", "해당 독서 기록이 존재하지 않습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EB002", "해당 게시글이 존재하지 않습니다.");
 
     private final int status;
