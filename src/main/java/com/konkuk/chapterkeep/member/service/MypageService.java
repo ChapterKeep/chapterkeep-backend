@@ -6,6 +6,7 @@ import com.konkuk.chapterkeep.domain.Post;
 import com.konkuk.chapterkeep.member.dto.MypagePostListDto;
 import com.konkuk.chapterkeep.member.dto.MypageResDto;
 import com.konkuk.chapterkeep.post.repository.PostRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.konkuk.chapterkeep.common.response.enums.Code;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MypageService {
 
     private final PostRepository postRepository;
