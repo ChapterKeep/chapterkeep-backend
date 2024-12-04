@@ -1,6 +1,5 @@
-package com.konkuk.chapterkeep.bookRecommend.dto;
+package com.konkuk.chapterkeep.postBoard.dto;
 
-import com.konkuk.chapterkeep.post.dto.EssayPostResDto;
 import lombok.Builder;
 import lombok.Getter;
 

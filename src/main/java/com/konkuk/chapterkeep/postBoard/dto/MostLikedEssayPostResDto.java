@@ -1,4 +1,4 @@
-package com.konkuk.chapterkeep.bookRecommend.dto;
+package com.konkuk.chapterkeep.postBoard.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ public class MostLikedEssayPostResDto {
     private String nickname;
     private String profileUrl;
     private boolean anonymous;
-    private String title;
+    private String postTitle;
     private long likesCount;
 
 }

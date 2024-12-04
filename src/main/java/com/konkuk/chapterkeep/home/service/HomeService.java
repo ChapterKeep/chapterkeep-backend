@@ -6,6 +6,7 @@ import com.konkuk.chapterkeep.common.response.enums.Code;
 import com.konkuk.chapterkeep.common.response.exception.GeneralException;
 import com.konkuk.chapterkeep.domain.BookReview;
 import com.konkuk.chapterkeep.domain.Member;
+import com.konkuk.chapterkeep.home.dto.BookShelfResDto;
 import com.konkuk.chapterkeep.home.dto.HomeResDto;
 import com.konkuk.chapterkeep.home.dto.ProfileResDto;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
@@ -24,38 +25,46 @@ public class HomeService {
     private final BookReviewRepository bookReviewRepository;
     private final LikesRepository likesRepository;
 
-    public HomeResDto getBookReviews() {
+    public HomeResDto getHomeData() {
 
-        List<BookReview> bookReviews = bookReviewRepository.findByMember_MemberId(memberService.getCurrentMemberId());
-
-        List<BookReviewResDto> bookReviewResDtoList = bookReviews.stream()
-                .map(bookReview -> {
-                    long likesCount = likesRepository.countByBookReview_BookReviewId(bookReview.getBookReviewId());
-                    return BookReviewResDto.fromEntity(bookReview, likesCount);
-                })
-                .toList();
-
-        return HomeResDto.builder()
-                .bookReviews(bookReviewResDtoList)
-                .build();
-    }
-
-    public ProfileResDto getProfile(){
-        Member member = memberService.getCurrentMember();
-
-        ProfileResDto response;
         try {
-            response = ProfileResDto.builder()
+            // 현재 사용자 ID 가져오기
+            Long currentMemberId = memberService.getCurrentMemberId();
+
+            // 사용자 프로필 데이터
+            Member member = memberService.getCurrentMember();
+
+            ProfileResDto profileResDto = ProfileResDto.builder()
                     .nickname(member.getNickname())
                     .introduction(member.getIntroduction())
                     .profileUrl(member.getProfileUrl())
                     .visibility(member.getVisibility())
                     .postCount((long) member.getPosts().size())
                     .build();
-        } catch (Exception e){
-            throw new GeneralException(Code.INTERNAL_ERROR,"프로필 정보를 가져오는 도중 오류가 발생했습니다.");
-        }
 
-        return response;
+            // 사용자 독서 기록 데이터
+            List<BookReview> bookReviews = bookReviewRepository.findByMember_MemberId(currentMemberId);
+            if (bookReviews.isEmpty()) {
+                throw new GeneralException(Code.NOT_FOUND, "해당 사용자의 독서 기록이 존재하지 않음 : " + currentMemberId);
+            }
+
+            List<BookShelfResDto> bookShelfResDtoList = bookReviews.stream()
+                    .map(bookReview -> BookShelfResDto.builder()
+                            .reviewId(bookReview.getBookReviewId())
+                            .coverUrl(bookReview.getBookInfo().getCoverUrl())
+                            .build()
+                    )
+                    .toList();
+
+            return HomeResDto.builder()
+                    .profileResDto(profileResDto)
+                    .bookShelfResDtoList(bookShelfResDtoList)
+                    .build();
+
+        } catch (GeneralException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GeneralException(Code.INTERNAL_ERROR, "홈 데이터를 불러오는 중 오류 발생: " + e.getMessage());
+        }
     }
 }

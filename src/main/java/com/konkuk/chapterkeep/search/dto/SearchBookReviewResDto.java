@@ -14,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchBookReviewResDto {
 
-    private List<BookReviewResDto> bookReviews;
+    private String reviewTitle;
+    private String coverUrl;
+    private String nickname;
 
 }

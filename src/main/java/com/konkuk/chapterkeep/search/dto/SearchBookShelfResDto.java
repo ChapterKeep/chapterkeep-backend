@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchBookShelfResDto {
 
-    private List<ShelfInfoDto> shelfInfoList;
+    private String nickname;
+    private String profileUrl;
+    private Long bookReviewCount;
 
 }

@@ -1,9 +1,12 @@
 package com.konkuk.chapterkeep.bookReview.service;
 
 import com.konkuk.chapterkeep.bookReview.dto.BookDto;
+import com.konkuk.chapterkeep.common.response.enums.Code;
+import com.konkuk.chapterkeep.common.response.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,8 +14,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,64 +25,67 @@ public class BookSearchService {
     @Value("${naver.api.client-secret}")
     private String clientSecret;
 
-    public List<BookDto> searchBooks(String keyword) {
+    public BookDto searchBooks(String keyword) {
+        // 요청 파라미터 유효성 검증
+        validateKeyword(keyword);
+
         try {
-            // 검색 키워드 인코딩
+            // API 요청 URL 생성
             String apiURL = "https://openapi.naver.com/v1/search/book.json?query=" + keyword;
-            System.out.println(keyword);
-            System.out.println("API URL: " + apiURL);
 
             // RestTemplate 초기화 및 헤더 설정
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.set("X-Naver-Client-Id", clientId);
             headers.set("X-Naver-Client-Secret", clientSecret);
-            System.out.println(clientId);
-            System.out.println(clientSecret);
-
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
-            // API 요청
+            // API 호출
             ResponseEntity<String> response = restTemplate.exchange(apiURL, HttpMethod.GET, entity, String.class);
-            System.out.println("Response Status: " + response.getStatusCode());
-            System.out.println("Response Body: " + response.getBody());
 
             // 상태 코드 확인
             if (!response.getStatusCode().is2xxSuccessful()) {
-                throw new RuntimeException("Failed to fetch books: " + response.getStatusCode());
+                throw new GeneralException(Code.EXTERNAL_API_ERROR, "도서 검색 API 호출 실패");
             }
 
             // JSON 응답 데이터 파싱
             return parseBookResponse(response.getBody());
 
         } catch (Exception e) {
-            e.printStackTrace(); // 디버깅 로그 추가
-            throw new RuntimeException("Error while searching books: " + e.getMessage(), e);
+            throw new GeneralException(Code.INTERNAL_ERROR, "도서 검색 중 오류 발생 : " + e.getMessage());
         }
     }
 
-    private List<BookDto> parseBookResponse(String responseBody) {
+    private void validateKeyword(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new GeneralException(Code.BAD_REQUEST, "유효하지 않은 ISBN 키워드");
+        }
+    }
+
+    private BookDto parseBookResponse(String responseBody) {
         try {
             JSONObject jsonObject = new JSONObject(responseBody);
             JSONArray jsonArray = jsonObject.getJSONArray("items");
 
-            List<BookDto> bookDtoList = new ArrayList<>();
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
+            if (jsonArray.length() > 0) {
+                JSONObject obj = jsonArray.getJSONObject(0);
                 String title = obj.getString("title");
                 String writer = obj.getString("author");
                 String coverUrl = obj.getString("image");
 
-                bookDtoList.add(BookDto.builder()
+                // BookDto 생성 후 반환
+                return BookDto.builder()
                         .title(title)
                         .writer(writer)
                         .coverUrl(coverUrl)
-                        .build());
+                        .build();
+            } else {
+                throw new GeneralException(Code.NOT_FOUND, "검색 결과가 존재하지 않음");
             }
-            return bookDtoList;
-
+        } catch (JSONException e) {
+                throw new GeneralException(Code.INTERNAL_ERROR, "JSON 파싱 오류: " + e.getMessage());
         } catch (Exception e) {
-            throw new RuntimeException("Error parsing response JSON: " + e.getMessage(), e);
+            throw new GeneralException(Code.INTERNAL_ERROR, "도서 데이터 처리 중 오류 발생: " + e.getMessage());
         }
     }
 }

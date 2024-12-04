@@ -1,10 +1,10 @@
-package com.konkuk.chapterkeep.bookRecommend.controller;
+package com.konkuk.chapterkeep.postBoard.controller;
 
-import com.konkuk.chapterkeep.bookRecommend.dto.PostBoardResDto;
-import com.konkuk.chapterkeep.bookRecommend.service.PostBoardService;
+import com.konkuk.chapterkeep.postBoard.dto.PostBoardResDto;
+import com.konkuk.chapterkeep.postBoard.service.PostBoardService;
 import com.konkuk.chapterkeep.common.response.dto.DataResponseDto;
 import com.konkuk.chapterkeep.common.response.enums.Code;
-import com.konkuk.chapterkeep.bookRecommend.dto.BookReviewRecommendResDto;
+import com.konkuk.chapterkeep.postBoard.dto.BookReviewRecommendResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
