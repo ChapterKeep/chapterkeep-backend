@@ -23,48 +23,44 @@ import java.util.List;
 @Transactional
 public class EssayPostService {
 
-    private final MemberService memberService;
-    private final MemberRepository memberRepository;
     private final LikesRepository likesRepository;
     private final EssayPostRepository essayPostRepository;
 
-    public EssayPostResDto createEssayPost(EssayPostReqDto essayPostReqDto) {
+    public EssayPostResDto createEssayPost(Member member, EssayPostReqDto essayPostReqDto) {
+        try {
+            Long memberId = member.getMemberId();
 
-        Long memberId = memberService.getCurrentMemberId();
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "멤버를 찾을 수 없습니다: " + memberId));
+            EssayPost essayPost = EssayPost.createEssayPost(
+                    member,
+                    essayPostReqDto.getPostTitle(),
+                    essayPostReqDto.isAnonymous(),
+                    essayPostReqDto.getContent()
+            );
+            essayPostRepository.save(essayPost);
 
-        EssayPost essayPost = EssayPost.createEssayPost(
-                member,
-                essayPostReqDto.getPostTitle(),
-                essayPostReqDto.isAnonymous(),
-                essayPostReqDto.getContent()
-        );
-        essayPostRepository.save(essayPost);
-
-        return EssayPostResDto.builder()
-                .memberId(memberId)
-                .nickname(member.getNickname())
-                .profileUrl(member.getProfileUrl())
-                .postId(essayPost.getPostId())
-                .postTitle(essayPost.getTitle())
-                .anonymous(essayPost.isAnonymous())
-                .content(essayPost.getContent())
-                .createdAt(essayPost.getCreatedAt())
-                .modifiedAt(essayPost.getModifiedAt())
-                .likesCount(likesRepository.countByPost_PostId(essayPost.getPostId()))
-                .build();
+            return EssayPostResDto.builder()
+                    .memberId(memberId)
+                    .nickname(member.getNickname())
+                    .profileUrl(member.getProfileUrl())
+                    .postId(essayPost.getPostId())
+                    .postTitle(essayPost.getTitle())
+                    .anonymous(essayPost.isAnonymous())
+                    .content(essayPost.getContent())
+                    .createdAt(essayPost.getCreatedAt())
+                    .modifiedAt(essayPost.getModifiedAt())
+                    .likesCount(likesRepository.countByPost_PostId(essayPost.getPostId()))
+                    .build();
+        }catch (GeneralException e){
+            throw e;
+        }catch (Exception e){
+            throw new GeneralException(Code.INTERNAL_ERROR, "백일장 게시글 저장 도중 알 수 없는 오류 발생");
+        }
     }
 
     public List<EssayPostListResDto> getAllEssayPost() {
-
         try {
-
             List<EssayPost> essayPosts = essayPostRepository.findAll();
 
-            if (essayPosts.isEmpty()) {
-                throw new GeneralException(Code.NOT_FOUND, "게시글이 존재하지 않음");
-            }
             return essayPosts.stream()
                     .map(post -> EssayPostListResDto.builder()
                             .postTitle(post.getTitle())
@@ -73,77 +69,100 @@ public class EssayPostService {
                             .build()
                     )
                     .toList();
-        } catch (Exception e) {
-            throw new GeneralException(Code.INTERNAL_ERROR, "게시글 데이터 처리 중 오류 발생: " + e.getMessage());
+        }catch (GeneralException e){
+            throw e;
+        }catch (Exception e){
+            throw new GeneralException(Code.INTERNAL_ERROR, "백일장 게시글 조회 도중 알 수 없는 오류 발생");
         }
     }
 
 
     public EssayPostResDto getEssayPost(Long postId) {
-        if (postId == null || postId <= 0) {
-            throw new GeneralException(Code.INVALID_INPUT_VALUE, "유효하지 않은 게시글 ID: " + postId);
-        }
+        try{
+            if (postId == null || postId <= 0) {
+                throw new GeneralException(Code.INVALID_INPUT_VALUE, "유효하지 않은 게시글 ID: " + postId);
+            }
 
-        Post post = essayPostRepository.findById(postId)
-                .orElseThrow(() -> new GeneralException(Code.NOT_FOUND, "게시글을 찾을 수 없음: " + postId));
+            Post post = essayPostRepository.findById(postId)
+                    .orElseThrow(() -> new GeneralException(Code.NOT_FOUND, "게시글을 찾을 수 없음: " + postId));
 
-        try {
-            long likesCount = likesRepository.countByPost_PostId(postId);
-            return EssayPostResDto.fromEntity(post, likesCount);
-        } catch (Exception e) {
-            throw new GeneralException(Code.INTERNAL_ERROR, "좋아요 수 계산 중 오류 발생: " + e.getMessage());
+            try {
+                long likesCount = likesRepository.countByPost_PostId(postId);
+                return EssayPostResDto.fromEntity(post, likesCount);
+            } catch (Exception e) {
+                throw new GeneralException(Code.INTERNAL_ERROR, "좋아요 수 계산 중 오류 발생: " + e.getMessage());
+            }
+
+        }catch (GeneralException e){
+            throw e;
+        }catch (Exception e){
+            throw new GeneralException(Code.INTERNAL_ERROR, "백일장 게시글 조회 도중 알 수 없는 오류 발생");
         }
     }
 
 
     public EssayPostResDto updateEssayPost(Long postId, EssayPostReqDto essayPostReqDto) {
+        try {
 
-        EssayPost essayPost = essayPostRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없음: " + postId));
+            EssayPost essayPost = essayPostRepository.findById(postId)
+                    .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없음: " + postId));
 
-        if (essayPost != null) {
-            essayPost.update(
-                    essayPostReqDto.getPostTitle(),
-                    essayPostReqDto.isAnonymous(),
-                    essayPostReqDto.getContent()
-            );
-        } else {
-            throw new IllegalArgumentException("해당 게시글은 에세이 게시글이 아닙니다.");
+            if (essayPost != null) {
+                essayPost.update(
+                        essayPostReqDto.getPostTitle(),
+                        essayPostReqDto.isAnonymous(),
+                        essayPostReqDto.getContent()
+                );
+            } else {
+                throw new IllegalArgumentException("해당 게시글은 백일장 게시글이 아닙니다.");
+            }
+
+            essayPostRepository.save(essayPost);
+            long likesCount = likesRepository.countByPost_PostId(postId);
+
+            return EssayPostResDto.fromEntity(essayPost, likesCount);
+        }catch (GeneralException e){
+            throw e;
+        }catch (Exception e){
+            throw new GeneralException(Code.INTERNAL_ERROR, "수정된 백일장 게시글 저장 도중 알 수 없는 오류 발생");
         }
-
-        essayPostRepository.save(essayPost);
-        long likesCount = likesRepository.countByPost_PostId(postId);
-
-        return EssayPostResDto.fromEntity(essayPost, likesCount);
     }
 
-    @Transactional
     public void deletePost(Long postId) {
-        if (likesRepository.existsByPost_PostId(postId)) {
-            likesRepository.deleteByPost_PostId(postId);
+        try {
+            if (likesRepository.existsByPost_PostId(postId)) {
+                likesRepository.deleteByPost_PostId(postId);
+            }
+            essayPostRepository.deleteById(postId);
+        }catch (GeneralException e){
+            throw e;
+        }catch (Exception e){
+            throw new GeneralException(Code.INTERNAL_ERROR, "백일장 게시글 삭제 도중 알 수 없는 오류 발생");
         }
-        essayPostRepository.deleteById(postId);
     }
 
     public List<EssayPostListResDto> searchEssayPost(String keyword) {
+        try {
 
-        if (keyword == null || keyword.trim().isEmpty()) {
-            throw new GeneralException(Code.INVALID_INPUT_VALUE, "유효하지 않은 검색어: " + keyword);
+            if (keyword == null || keyword.trim().isEmpty()) {
+                throw new GeneralException(Code.INVALID_INPUT_VALUE, "유효하지 않은 검색어: " + keyword);
+            }
+
+            List<EssayPost> posts = essayPostRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+
+            return posts.stream()
+                    .map(post -> EssayPostListResDto.builder()
+                            .postTitle(post.getTitle())
+                            .nickname(post.getMember().getNickname())
+                            .likesCount(likesRepository.countByPost_PostId(post.getPostId()))
+                            .build())
+                    .toList();
+        }catch (GeneralException e){
+            throw e;
+        }catch (Exception e){
+            throw new GeneralException(Code.INTERNAL_ERROR, "백일장 게시글 검색 도중 알 수 없는 오류 발생");
         }
 
-        List<EssayPost> posts = essayPostRepository.findByTitleContainingOrContentContaining(keyword, keyword);
-
-        if (posts.isEmpty()) {
-            throw new GeneralException(Code.NOT_FOUND, "해당 검색어에 대한 검색 결과가 존재하지 않음: " + keyword);
-        }
-
-        return posts.stream()
-                .map(post -> EssayPostListResDto.builder()
-                        .postTitle(post.getTitle())
-                        .nickname(post.getMember().getNickname())
-                        .likesCount(likesRepository.countByPost_PostId(post.getPostId()))
-                        .build())
-                .toList();
     }
 
 

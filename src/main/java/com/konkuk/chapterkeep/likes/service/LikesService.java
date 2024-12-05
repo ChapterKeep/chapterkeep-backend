@@ -25,17 +25,16 @@ public class LikesService {
     private final LikesRepository likesRepository;
     private final BookReviewRepository bookReviewRepository;
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
     private final EssayPostRepository essayPostRepository;
 
-    /*
-    TODO : 경우에 따라 분기 처리 할 수 있게 리팩토링
-    */
-
-    public void bookReviewToggleLike(Member member, Long reviewId) {
+    public String bookReviewToggleLike(Member member, Long reviewId) {
         try {
+            String response;
             Long memberId = member.getMemberId();
 
+//            if(memberId!=null) {
+//                throw new GeneralException(Code.REVIEW_NOT_FOUND, "존재하지 않는 독서 기록 : ");
+//            }
             BookReview bookReview = bookReviewRepository.findById(reviewId)
                     .orElseThrow(() -> new GeneralException(Code.REVIEW_NOT_FOUND, "존재하지 않는 독서 기록 : " + reviewId));
 
@@ -44,6 +43,7 @@ public class LikesService {
             if (existingLike.isPresent()) {
                 try {
                     likesRepository.delete(existingLike.get());
+                    response = "좋아요 삭제 완료";
                 } catch (Exception e) {
                     throw new GeneralException(Code.DATABASE_ERROR, "좋아요 삭제 중 오류 발생 : " + e.getMessage());
                 }
@@ -56,21 +56,23 @@ public class LikesService {
                             null
                     );
                     likesRepository.save(like);
+                    response = "좋아요 저장 완료";
                 } catch (Exception e) {
                     throw new GeneralException(Code.DATABASE_ERROR, "좋아요 저장 중 오류 발생 : " + e.getMessage());
                 }
             }
+            return response;
         } catch (GeneralException e) {
             throw e;
         } catch (Exception e) {
-            throw new GeneralException(Code.FILE_UPLOAD_ERROR, "좋아요 상태 변경 도중 알 수 없는 오류 발생");
+            throw new GeneralException(Code.INTERNAL_ERROR, "좋아요 상태 변경 도중 알 수 없는 오류 발생");
         }
     }
 
 
-    public void postToggleLike(Member member, Long postId) {
+    public String postToggleLike(Member member, Long postId) {
         try {
-
+            String response;
             Long memberId = memberService.getCurrentMemberId();
 
             Post post = essayPostRepository.findById(postId)
@@ -80,6 +82,7 @@ public class LikesService {
 
             if (existingLike.isPresent()) {
                 likesRepository.delete(existingLike.get());
+                response = "좋아요 삭제 완료";
             } else {
                 Likes like = Likes.createLikes(
                         null,
@@ -87,11 +90,13 @@ public class LikesService {
                         member,
                         null);
                 likesRepository.save(like);
+                response = "좋아요 저장 완료";
             }
+            return response;
         } catch (GeneralException e) {
             throw e;
         } catch (Exception e) {
-            throw new GeneralException(Code.FILE_UPLOAD_ERROR, "좋아요 상태 변경 도중 알 수 없는 오류 발생");
+            throw new GeneralException(Code.INTERNAL_ERROR, "좋아요 상태 변경 도중 알 수 없는 오류 발생");
         }
     }
 }

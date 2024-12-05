@@ -2,6 +2,8 @@ package com.konkuk.chapterkeep.post.controller;
 
 import com.konkuk.chapterkeep.common.response.dto.DataResponseDto;
 import com.konkuk.chapterkeep.common.response.enums.Code;
+import com.konkuk.chapterkeep.domain.Member;
+import com.konkuk.chapterkeep.member.service.MemberService;
 import com.konkuk.chapterkeep.post.dto.EssayPostListResDto;
 import com.konkuk.chapterkeep.post.dto.EssayPostReqDto;
 import com.konkuk.chapterkeep.post.dto.EssayPostResDto;
@@ -17,10 +19,12 @@ import java.util.List;
 public class EssayPostController {
 
     private final EssayPostService essayPostService;
+    private final MemberService memberService;
 
     @PostMapping("/create")
     public DataResponseDto<EssayPostResDto> createEssayPost(@RequestBody EssayPostReqDto essayPostReqDto) {
-        EssayPostResDto response = essayPostService.createEssayPost(essayPostReqDto);
+        Member member = memberService.getCurrentMember();
+        EssayPostResDto response = essayPostService.createEssayPost(member, essayPostReqDto);
         return new DataResponseDto<>(response, Code.OK, "백일장 게시글 생성 성공");
     }
 

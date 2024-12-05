@@ -19,7 +19,6 @@ import java.util.List;
 public class MypageService {
 
     private final PostRepository postRepository;
-    private final MemberService memberService;
 
     public MypageResDto getMyPage(Member member) {
         try {
