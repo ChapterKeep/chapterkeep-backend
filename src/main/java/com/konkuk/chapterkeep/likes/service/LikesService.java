@@ -32,55 +32,66 @@ public class LikesService {
     TODO : 경우에 따라 분기 처리 할 수 있게 리팩토링
     */
 
-    public void bookReviewToggleLike(Long reviewId) {
-        Long memberId = memberService.getCurrentMemberId();
-        Optional<Member> member = memberRepository.findById(memberId);
+    public void bookReviewToggleLike(Member member, Long reviewId) {
+        try {
+            Long memberId = member.getMemberId();
 
-        BookReview bookReview = bookReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new GeneralException(Code.REVIEW_NOT_FOUND, "존재하지 않는 독서 기록 : " + reviewId));
+            BookReview bookReview = bookReviewRepository.findById(reviewId)
+                    .orElseThrow(() -> new GeneralException(Code.REVIEW_NOT_FOUND, "존재하지 않는 독서 기록 : " + reviewId));
 
-        Optional<Likes> existingLike = likesRepository.findByMemberMemberIdAndBookReviewBookReviewId(memberId, reviewId);
+            Optional<Likes> existingLike = likesRepository.findByMemberMemberIdAndBookReviewBookReviewId(memberId, reviewId);
 
-        if (existingLike.isPresent()) {
-            try {
-                likesRepository.delete(existingLike.get());
-            } catch (Exception e) {
-                throw new GeneralException(Code.DATABASE_ERROR, "좋아요 삭제 중 오류 발생 : " + e.getMessage());
+            if (existingLike.isPresent()) {
+                try {
+                    likesRepository.delete(existingLike.get());
+                } catch (Exception e) {
+                    throw new GeneralException(Code.DATABASE_ERROR, "좋아요 삭제 중 오류 발생 : " + e.getMessage());
+                }
+            } else {
+                try {
+                    Likes like = Likes.createLikes(
+                            bookReview,
+                            null,
+                            member,
+                            null
+                    );
+                    likesRepository.save(like);
+                } catch (Exception e) {
+                    throw new GeneralException(Code.DATABASE_ERROR, "좋아요 저장 중 오류 발생 : " + e.getMessage());
+                }
             }
-        } else {
-            try {
-                Likes like = Likes.createLikes(
-                        bookReview,
-                        null,
-                        member.orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "존재하지 않는 회원 : " + memberId)),
-                        null
-                );
-                likesRepository.save(like);
-            } catch (Exception e) {
-                throw new GeneralException(Code.DATABASE_ERROR, "좋아요 저장 중 오류 발생 : " + e.getMessage());
-            }
+        } catch (GeneralException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GeneralException(Code.FILE_UPLOAD_ERROR, "좋아요 상태 변경 도중 알 수 없는 오류 발생");
         }
     }
 
 
-    public void postToggleLike(Long postId) {
+    public void postToggleLike(Member member, Long postId) {
+        try {
 
-        Long memberId = memberService.getCurrentMemberId();
-        Optional<Member> member = memberRepository.findById(memberId);
+            Long memberId = memberService.getCurrentMemberId();
 
-        Post post = essayPostRepository.findById(postId)
-                .orElseThrow(() -> new GeneralException(Code.POST_NOT_FOUND));
+            Post post = essayPostRepository.findById(postId)
+                    .orElseThrow(() -> new GeneralException(Code.POST_NOT_FOUND));
 
-        Optional<Likes> existingLike = likesRepository.findByMemberMemberIdAndPostPostId(memberId, postId);
+            Optional<Likes> existingLike = likesRepository.findByMemberMemberIdAndPostPostId(memberId, postId);
 
-        if (existingLike.isPresent()) {
-            likesRepository.delete(existingLike.get());
-        } else {
-            Likes like = Likes.createLikes(
-                    null,
-                    post,
-                    member.orElse(null),null);
-            likesRepository.save(like);
+            if (existingLike.isPresent()) {
+                likesRepository.delete(existingLike.get());
+            } else {
+                Likes like = Likes.createLikes(
+                        null,
+                        post,
+                        member,
+                        null);
+                likesRepository.save(like);
+            }
+        } catch (GeneralException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GeneralException(Code.FILE_UPLOAD_ERROR, "좋아요 상태 변경 도중 알 수 없는 오류 발생");
         }
     }
 }
