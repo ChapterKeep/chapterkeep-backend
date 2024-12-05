@@ -51,7 +51,9 @@ public class BookSearchService {
             // JSON 응답 데이터 파싱
             return parseBookResponse(response.getBody());
 
-        } catch (Exception e) {
+        } catch (GeneralException e) {
+            throw e;
+        } catch (Exception e){
             throw new GeneralException(Code.INTERNAL_ERROR, "도서 검색 중 오류 발생 : " + e.getMessage());
         }
     }
@@ -84,7 +86,9 @@ public class BookSearchService {
             }
         } catch (JSONException e) {
                 throw new GeneralException(Code.INTERNAL_ERROR, "JSON 파싱 오류: " + e.getMessage());
-        } catch (Exception e) {
+        } catch (GeneralException e) {
+            throw e;
+        } catch (Exception e){
             throw new GeneralException(Code.INTERNAL_ERROR, "도서 데이터 처리 중 오류 발생: " + e.getMessage());
         }
     }
