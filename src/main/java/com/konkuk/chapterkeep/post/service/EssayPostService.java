@@ -28,6 +28,9 @@ public class EssayPostService {
 
     public EssayPostResDto createEssayPost(Member member, EssayPostReqDto essayPostReqDto) {
         try {
+            // 요청 데이터 유효성 검사
+            validateEssayPostRequest(essayPostReqDto);
+
             Long memberId = member.getMemberId();
 
             EssayPost essayPost = EssayPost.createEssayPost(
@@ -104,6 +107,9 @@ public class EssayPostService {
     public EssayPostResDto updateEssayPost(Long postId, EssayPostReqDto essayPostReqDto) {
         try {
 
+            // 요청 데이터 유효성 검사
+            validateEssayPostRequest(essayPostReqDto);
+
             EssayPost essayPost = essayPostRepository.findById(postId)
                     .orElseThrow(() -> new GeneralException(Code.NOT_FOUND, "게시글을 찾을 수 없음: " + postId));
 
@@ -164,6 +170,29 @@ public class EssayPostService {
         }
 
     }
+
+    private void validateEssayPostRequest(EssayPostReqDto essayPostReqDto) {
+        if (essayPostReqDto == null) {
+            throw new GeneralException(Code.INVALID_INPUT_VALUE, "요청 데이터가 비어 있습니다.");
+        }
+
+        // 제목 검증
+        if (essayPostReqDto.getPostTitle() == null || essayPostReqDto.getPostTitle().trim().isEmpty()) {
+            throw new GeneralException(Code.INVALID_INPUT_VALUE, "게시글 제목은 필수 항목입니다.");
+        }
+
+        // 내용 검증
+        if (essayPostReqDto.getContent() == null || essayPostReqDto.getContent().trim().isEmpty()) {
+            throw new GeneralException(Code.INVALID_INPUT_VALUE, "게시글 내용은 필수 항목입니다.");
+        }
+
+        // 내용 길이 제한 검증
+        if (essayPostReqDto.getContent().length() > 2000) {
+            throw new GeneralException(Code.INVALID_INPUT_VALUE, "게시글 내용은 최대 2000자까지 작성 가능합니다.");
+        }
+
+    }
+
 
 
 }
