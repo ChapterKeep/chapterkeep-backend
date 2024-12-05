@@ -32,9 +32,6 @@ public class LikesService {
             String response;
             Long memberId = member.getMemberId();
 
-//            if(memberId!=null) {
-//                throw new GeneralException(Code.REVIEW_NOT_FOUND, "존재하지 않는 독서 기록 : ");
-//            }
             BookReview bookReview = bookReviewRepository.findById(reviewId)
                     .orElseThrow(() -> new GeneralException(Code.REVIEW_NOT_FOUND, "존재하지 않는 독서 기록 : " + reviewId));
 
