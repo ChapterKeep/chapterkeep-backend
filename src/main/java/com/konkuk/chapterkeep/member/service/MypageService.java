@@ -22,34 +22,40 @@ public class MypageService {
     private final MemberService memberService;
 
     public MypageResDto getMyPage(Member member) {
+        try {
 
-        // 1. 사용자가 작성한 게시글
-        List<MypagePostListDto> myPosts = getMyPosts(member).stream()
-                .limit(2) // 상위 2개만 추출
-                .toList();
+            // 1. 사용자가 작성한 게시글
+            List<MypagePostListDto> myPosts = getMyPosts(member).stream()
+                    .limit(2) // 상위 2개만 추출
+                    .toList();
 
-        // 2. 댓글 단 게시글
-        List<MypagePostListDto> commentedPosts = getCommentedPosts(member).stream()
-                .limit(2) // 상위 2개만 추출
-                .toList();
+            // 2. 댓글 단 게시글
+            List<MypagePostListDto> commentedPosts = getCommentedPosts(member).stream()
+                    .limit(2) // 상위 2개만 추출
+                    .toList();
 
-        // 3. 좋아요 누른 게시글
-        List<MypagePostListDto> likedPosts = getLikedPosts(member).stream()
-                .limit(2) // 상위 2개만 추출
-                .toList();
+            // 3. 좋아요 누른 게시글
+            List<MypagePostListDto> likedPosts = getLikedPosts(member).stream()
+                    .limit(2) // 상위 2개만 추출
+                    .toList();
 
-        return MypageResDto.builder()
-                .nickname(member.getNickname())
-                .postCount((long) member.getPosts().size())
-                .myPosts(myPosts)
-                .commentedPosts(commentedPosts)
-                .likedPosts(likedPosts)
-                .build();
+            return MypageResDto.builder()
+                    .nickname(member.getNickname())
+                    .postCount((long) member.getPosts().size())
+                    .myPosts(myPosts)
+                    .commentedPosts(commentedPosts)
+                    .likedPosts(likedPosts)
+                    .build();
+        }catch (GeneralException e){
+            throw e;
+        }catch (Exception e){
+            throw new GeneralException(Code.INTERNAL_ERROR, "마이페이지 조회 도중 알 수 없는 오류 발생");
+        }
     }
 
     public List<MypagePostListDto> getMyPosts(Member member) {
-        Long memberId = member.getMemberId();
         try {
+            Long memberId = member.getMemberId();
             return postRepository.findByMember_MemberId(memberId)
                     .stream()
                     .sorted((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt())) // 게시글 생성순으로 내림차순 정렬
