@@ -29,49 +29,62 @@ public class AccountService {
 
 
     public SignUpResDto signUpProcess(SignUpReqDto signUpReqDto, MultipartFile profileImage) {
-
-        String username = signUpReqDto.getId();
-        String nickname = signUpReqDto.getNickname();
-
-        if ( isUsernameExists(username) || isNicknameExists(nickname)){
-            throw new GeneralException(Code.INVALID_INPUT_VALUE, "중복된 아이디 또는 중복된 닉네임");
-        }
-
-        String profileUrl = null;
-        if (profileImage != null && !profileImage.isEmpty()) {
-            // S3에 이미지 업로드하고 URL 생성
-            profileUrl = imageService.uploadImageToS3(profileImage);
-        }
-
-        Member member;
         try {
-            member = Member.createMember(
-                    username,
-                    bCryptPasswordEncoder.encode(signUpReqDto.getPassword()), // 암호화
-                    nickname,
-                    signUpReqDto.getIntroduction(),
-                    profileUrl,
-                    Role.USER,
-                    true
-            );
-            memberRepository.save(member);
-        } catch (DataAccessException e) {
-            throw new GeneralException(Code.DATABASE_ERROR, "회원 정보 저장 도중 오류 발생");
-        } catch (Exception e) {
+            String username = signUpReqDto.getId();
+            String nickname = signUpReqDto.getNickname();
+
+            if (isUsernameExists(username)) {
+                throw new GeneralException(Code.INVALID_INPUT_VALUE, "중복된 아이디");
+            }
+            if (isNicknameExists(nickname)) {
+                throw new GeneralException(Code.INVALID_INPUT_VALUE, "중복된 닉네임");
+            }
+
+            String profileUrl = null;
+            if (profileImage != null && !profileImage.isEmpty()) {
+                // S3에 이미지 업로드하고 URL 생성
+                profileUrl = imageService.uploadImageToS3(profileImage);
+            }
+
+            Member member;
+            try {
+                member = Member.createMember(
+                        username,
+                        bCryptPasswordEncoder.encode(signUpReqDto.getPassword()), // 암호화
+                        nickname,
+                        signUpReqDto.getIntroduction(),
+                        profileUrl,
+                        Role.USER,
+                        true
+                );
+                memberRepository.save(member);
+            } catch (Exception e) {
+                throw new GeneralException(Code.DATABASE_ERROR, "회원 정보 저장 도중 오류 발생");
+            }
+            return SignUpResDto.builder()
+                    .memberId(member.getMemberId())
+                    .build();
+
+        } catch (GeneralException e) {
+            throw e;
+        }catch (Exception e ){
             throw new GeneralException(Code.INTERNAL_ERROR, "회원 정보 저장 도중 알 수 없는 오류 발생");
         }
-        return SignUpResDto.builder()
-                .memberId(member.getMemberId())
-                .build();
     }
     public String deleteAccountProcess(String username) {
-        Long memberId = memberService.getCurrentMemberId();
-        if (memberRepository.findById(memberId).equals(memberRepository.findByName(username))) {
-            memberRepository.deleteByMemberId(memberId);
-        }else{
-            throw new GeneralException(Code.MEMBER_MISMATCH, "회원 이름이 현재 계정과 다름");
+        try {
+            Long memberId = memberService.getCurrentMemberId();
+            if (memberRepository.findById(memberId).equals(memberRepository.findByName(username))) {
+                memberRepository.deleteByMemberId(memberId);
+            } else {
+                throw new GeneralException(Code.MEMBER_MISMATCH, "회원 이름이 현재 계정과 다름");
+            }
+            return username + " 회원 탈퇴 성공";
+        } catch (GeneralException e) {
+            throw e;
+        }catch (Exception e ){
+            throw new GeneralException(Code.INTERNAL_ERROR, "회원 정보 저장 도중 알 수 없는 오류 발생");
         }
-        return username + " 회원 탈퇴 성공";
     }
 
     public boolean isUsernameExists(String username) {
