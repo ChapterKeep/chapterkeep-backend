@@ -21,21 +21,20 @@ public class MypageService {
     private final PostRepository postRepository;
     private final MemberService memberService;
 
-    public MypageResDto getMyPage() {
-        Member member = memberService.getCurrentMember();
+    public MypageResDto getMyPage(Member member) {
 
         // 1. 사용자가 작성한 게시글
-        List<MypagePostListDto> myPosts = getMyPosts().stream()
+        List<MypagePostListDto> myPosts = getMyPosts(member).stream()
                 .limit(2) // 상위 2개만 추출
                 .toList();
 
         // 2. 댓글 단 게시글
-        List<MypagePostListDto> commentedPosts = getCommentedPosts().stream()
+        List<MypagePostListDto> commentedPosts = getCommentedPosts(member).stream()
                 .limit(2) // 상위 2개만 추출
                 .toList();
 
         // 3. 좋아요 누른 게시글
-        List<MypagePostListDto> likedPosts = getLikedPosts().stream()
+        List<MypagePostListDto> likedPosts = getLikedPosts(member).stream()
                 .limit(2) // 상위 2개만 추출
                 .toList();
 
@@ -48,9 +47,8 @@ public class MypageService {
                 .build();
     }
 
-    public List<MypagePostListDto> getMyPosts() {
-        Long memberId = memberService.getCurrentMemberId();
-
+    public List<MypagePostListDto> getMyPosts(Member member) {
+        Long memberId = member.getMemberId();
         try {
             return postRepository.findByMember_MemberId(memberId)
                     .stream()
@@ -67,9 +65,7 @@ public class MypageService {
         }
     }
 
-    public List<MypagePostListDto> getCommentedPosts() {
-        Member member = memberService.getCurrentMember();
-
+    public List<MypagePostListDto> getCommentedPosts(Member member) {
         try {
             return member.getComments().stream()
                     .sorted((c1, c2) -> c2.getCreatedDate().compareTo(c1.getCreatedDate())) // 댓글 생성순으로 내림차순 정렬
@@ -88,9 +84,7 @@ public class MypageService {
         }
     }
 
-    public List<MypagePostListDto> getLikedPosts() {
-        Member member = memberService.getCurrentMember();
-
+    public List<MypagePostListDto> getLikedPosts(Member member) {
         try {
             return member.getLikes().stream()
                     .sorted((l1, l2) -> l2.getCreatedDate().compareTo(l1.getCreatedDate())) // 좋아요 생성순으로 내림차순 정렬
