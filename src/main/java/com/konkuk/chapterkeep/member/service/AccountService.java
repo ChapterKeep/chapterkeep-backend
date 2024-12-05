@@ -83,7 +83,7 @@ public class AccountService {
         } catch (GeneralException e) {
             throw e;
         }catch (Exception e ){
-            throw new GeneralException(Code.INTERNAL_ERROR, "회원 정보 저장 도중 알 수 없는 오류 발생");
+            throw new GeneralException(Code.INTERNAL_ERROR, "회원 정보 삭제 도중 알 수 없는 오류 발생");
         }
     }
 
