@@ -105,7 +105,7 @@ public class EssayPostService {
         try {
 
             EssayPost essayPost = essayPostRepository.findById(postId)
-                    .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없음: " + postId));
+                    .orElseThrow(() -> new GeneralException(Code.NOT_FOUND, "게시글을 찾을 수 없음: " + postId));
 
             if (essayPost != null) {
                 essayPost.update(
@@ -114,7 +114,7 @@ public class EssayPostService {
                         essayPostReqDto.getContent()
                 );
             } else {
-                throw new IllegalArgumentException("해당 게시글은 백일장 게시글이 아닙니다.");
+                throw new GeneralException(Code.POST_MISMATCH, "해당 게시글은 백일장 게시글이 아님");
             }
 
             essayPostRepository.save(essayPost);
