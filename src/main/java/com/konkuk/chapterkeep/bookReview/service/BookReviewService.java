@@ -17,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class BookReviewService {
@@ -64,7 +62,7 @@ public class BookReviewService {
 
         return BookReviewCreateResDto.builder()
                 .reviewId(bookReview.getBookReviewId())
-                .createdAt(bookReview.getCreatedDate())
+                .createdAt(bookReview.getCreatedAt())
                 .build();
     }
 
@@ -95,8 +93,8 @@ public class BookReviewService {
                 .quotation(bookReview.getQuotation())
                 .content(bookReview.getContent())
                 .coverColor(coverColor)
-                .createdAt(bookReview.getCreatedDate())
-                .modifiedAt(bookReview.getModifiedDate())
+                .createdAt(bookReview.getCreatedAt())
+                .modifiedAt(bookReview.getModifiedAt())
                 .nickname(member.getNickname())
                 .likesCount(likesRepository.countByBookReview_BookReviewId(reviewId))
                 .build();
@@ -127,7 +125,7 @@ public class BookReviewService {
 
         return BookReviewUpdateResDto.builder()
                 .reviewId(bookReview.getBookReviewId())
-                .modifiedAt(bookReview.getModifiedDate())
+                .modifiedAt(bookReview.getModifiedAt())
                 .build();
     }
 

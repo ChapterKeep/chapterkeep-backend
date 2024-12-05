@@ -52,10 +52,10 @@ public class MypageService {
         try {
             return postRepository.findByMember_MemberId(memberId)
                     .stream()
-                    .sorted((p1, p2) -> p2.getCreatedDate().compareTo(p1.getCreatedDate())) // 게시글 생성순으로 내림차순 정렬
+                    .sorted((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt())) // 게시글 생성순으로 내림차순 정렬
                     .map(post -> MypagePostListDto.builder()
                             .title(post.getTitle())
-                            .createdAt(post.getCreatedDate().toLocalDate())
+                            .createdAt(post.getCreatedAt().toLocalDate())
                             .nickname(post.getMember().getNickname())
                             .postId(post.getPostId())
                             .build())
@@ -68,12 +68,12 @@ public class MypageService {
     public List<MypagePostListDto> getCommentedPosts(Member member) {
         try {
             return member.getComments().stream()
-                    .sorted((c1, c2) -> c2.getCreatedDate().compareTo(c1.getCreatedDate())) // 댓글 생성순으로 내림차순 정렬
+                    .sorted((c1, c2) -> c2.getCreatedAt().compareTo(c1.getCreatedAt())) // 댓글 생성순으로 내림차순 정렬
                     .map(comment -> {
                         Post post = comment.getPost();
                         return MypagePostListDto.builder()
                                 .title(post.getTitle())
-                                .createdAt(post.getCreatedDate().toLocalDate())
+                                .createdAt(post.getCreatedAt().toLocalDate())
                                 .nickname(post.getMember().getNickname())
                                 .postId(post.getPostId())
                                 .build();
@@ -87,12 +87,12 @@ public class MypageService {
     public List<MypagePostListDto> getLikedPosts(Member member) {
         try {
             return member.getLikes().stream()
-                    .sorted((l1, l2) -> l2.getCreatedDate().compareTo(l1.getCreatedDate())) // 좋아요 생성순으로 내림차순 정렬
+                    .sorted((l1, l2) -> l2.getCreatedAt().compareTo(l1.getCreatedAt())) // 좋아요 생성순으로 내림차순 정렬
                     .map(like -> {
                         Post post = like.getPost();
                         return MypagePostListDto.builder()
                                 .title(post.getTitle())
-                                .createdAt(post.getCreatedDate().toLocalDate())
+                                .createdAt(post.getCreatedAt().toLocalDate())
                                 .nickname(post.getMember().getNickname())
                                 .postId(post.getPostId())
                                 .build();
