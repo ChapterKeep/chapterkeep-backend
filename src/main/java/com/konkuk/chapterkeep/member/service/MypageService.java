@@ -40,7 +40,7 @@ public class MypageService {
 
             return MypageResDto.builder()
                     .nickname(member.getNickname())
-                    .postCount((long) member.getPosts().size())
+                    .postCount((long) member.getBookReviews().size())
                     .myPosts(myPosts)
                     .commentedPosts(commentedPosts)
                     .likedPosts(likedPosts)

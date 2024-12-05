@@ -32,13 +32,12 @@ public class HomeService {
             // 현재 사용자 ID 가져오기
             Long currentMemberId = member.getMemberId();
 
-
             ProfileResDto profileResDto = ProfileResDto.builder()
                     .nickname(member.getNickname())
                     .introduction(member.getIntroduction())
                     .profileUrl(member.getProfileUrl())
                     .visibility(member.getVisibility())
-                    .postCount((long) member.getPosts().size())
+                    .postCount((long) member.getBookReviews().size())
                     .build();
 
             // 사용자 독서 기록 데이터
