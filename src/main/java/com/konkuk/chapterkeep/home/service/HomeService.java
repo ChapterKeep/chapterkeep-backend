@@ -23,18 +23,15 @@ import java.util.List;
 @Transactional
 public class HomeService {
 
-    private final MemberService memberService;
     private final BookReviewRepository bookReviewRepository;
     private final LikesRepository likesRepository;
 
-    public HomeResDto getHomeData() {
+    public HomeResDto getHomeData(Member member) {
 
         try {
             // 현재 사용자 ID 가져오기
-            Long currentMemberId = memberService.getCurrentMemberId();
+            Long currentMemberId = member.getMemberId();
 
-            // 사용자 프로필 데이터
-            Member member = memberService.getCurrentMember();
 
             ProfileResDto profileResDto = ProfileResDto.builder()
                     .nickname(member.getNickname())
