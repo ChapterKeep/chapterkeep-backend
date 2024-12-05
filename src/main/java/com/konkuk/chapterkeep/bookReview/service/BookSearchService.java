@@ -25,13 +25,13 @@ public class BookSearchService {
     @Value("${naver.api.client-secret}")
     private String clientSecret;
 
-    public BookDto searchBooks(String keyword) {
+    public BookDto searchBook(String isbn) {
         // 요청 파라미터 유효성 검증
-        validateKeyword(keyword);
+        validateKeyword(isbn);
 
         try {
             // API 요청 URL 생성
-            String apiURL = "https://openapi.naver.com/v1/search/book.json?query=" + keyword;
+            String apiURL = "https://openapi.naver.com/v1/search/book.json?query=" + isbn;
 
             // RestTemplate 초기화 및 헤더 설정
             RestTemplate restTemplate = new RestTemplate();
