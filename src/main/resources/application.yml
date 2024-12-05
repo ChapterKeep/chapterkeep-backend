@@ -21,6 +21,13 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     enabled: true
+logging:
+  level:
+    org.springframework.web: DEBUG          # Spring Web 관련 로그
+    org.springframework.web.client: DEBUG  # RestTemplate 로그
+    org.apache.http: DEBUG                  # Apache HttpClient 로그
+    org.springframework.http: TRACE        # HTTP 관련 세부 로그
+
 cloud:
   aws:
     s3:

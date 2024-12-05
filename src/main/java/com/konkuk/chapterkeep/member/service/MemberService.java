@@ -5,6 +5,7 @@ import com.konkuk.chapterkeep.common.response.exception.GeneralException;
 import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.domain.enums.Role;
 import com.konkuk.chapterkeep.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;

@@ -6,6 +6,7 @@ import com.konkuk.chapterkeep.domain.Post;
 import com.konkuk.chapterkeep.member.dto.MypagePostListDto;
 import com.konkuk.chapterkeep.member.dto.MypageResDto;
 import com.konkuk.chapterkeep.post.repository.PostRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.konkuk.chapterkeep.common.response.enums.Code;
 import org.springframework.stereotype.Service;
@@ -14,26 +15,26 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MypageService {
 
     private final PostRepository postRepository;
     private final MemberService memberService;
 
-    public MypageResDto getMyPage() {
-        Member member = memberService.getCurrentMember();
+    public MypageResDto getMyPage(Member member) {
 
         // 1. 사용자가 작성한 게시글
-        List<MypagePostListDto> myPosts = getMyPosts().stream()
+        List<MypagePostListDto> myPosts = getMyPosts(member).stream()
                 .limit(2) // 상위 2개만 추출
                 .toList();
 
         // 2. 댓글 단 게시글
-        List<MypagePostListDto> commentedPosts = getCommentedPosts().stream()
+        List<MypagePostListDto> commentedPosts = getCommentedPosts(member).stream()
                 .limit(2) // 상위 2개만 추출
                 .toList();
 
         // 3. 좋아요 누른 게시글
-        List<MypagePostListDto> likedPosts = getLikedPosts().stream()
+        List<MypagePostListDto> likedPosts = getLikedPosts(member).stream()
                 .limit(2) // 상위 2개만 추출
                 .toList();
 
@@ -46,16 +47,15 @@ public class MypageService {
                 .build();
     }
 
-    public List<MypagePostListDto> getMyPosts() {
-        Long memberId = memberService.getCurrentMemberId();
-
+    public List<MypagePostListDto> getMyPosts(Member member) {
+        Long memberId = member.getMemberId();
         try {
             return postRepository.findByMember_MemberId(memberId)
                     .stream()
-                    .sorted((p1, p2) -> p2.getCreatedDate().compareTo(p1.getCreatedDate())) // 게시글 생성순으로 내림차순 정렬
+                    .sorted((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt())) // 게시글 생성순으로 내림차순 정렬
                     .map(post -> MypagePostListDto.builder()
                             .title(post.getTitle())
-                            .createdAt(post.getCreatedDate().toLocalDate())
+                            .createdAt(post.getCreatedAt().toLocalDate())
                             .nickname(post.getMember().getNickname())
                             .postId(post.getPostId())
                             .build())
@@ -65,17 +65,15 @@ public class MypageService {
         }
     }
 
-    public List<MypagePostListDto> getCommentedPosts() {
-        Member member = memberService.getCurrentMember();
-
+    public List<MypagePostListDto> getCommentedPosts(Member member) {
         try {
             return member.getComments().stream()
-                    .sorted((c1, c2) -> c2.getCreatedDate().compareTo(c1.getCreatedDate())) // 댓글 생성순으로 내림차순 정렬
+                    .sorted((c1, c2) -> c2.getCreatedAt().compareTo(c1.getCreatedAt())) // 댓글 생성순으로 내림차순 정렬
                     .map(comment -> {
                         Post post = comment.getPost();
                         return MypagePostListDto.builder()
                                 .title(post.getTitle())
-                                .createdAt(post.getCreatedDate().toLocalDate())
+                                .createdAt(post.getCreatedAt().toLocalDate())
                                 .nickname(post.getMember().getNickname())
                                 .postId(post.getPostId())
                                 .build();
@@ -86,17 +84,15 @@ public class MypageService {
         }
     }
 
-    public List<MypagePostListDto> getLikedPosts() {
-        Member member = memberService.getCurrentMember();
-
+    public List<MypagePostListDto> getLikedPosts(Member member) {
         try {
             return member.getLikes().stream()
-                    .sorted((l1, l2) -> l2.getCreatedDate().compareTo(l1.getCreatedDate())) // 좋아요 생성순으로 내림차순 정렬
+                    .sorted((l1, l2) -> l2.getCreatedAt().compareTo(l1.getCreatedAt())) // 좋아요 생성순으로 내림차순 정렬
                     .map(like -> {
                         Post post = like.getPost();
                         return MypagePostListDto.builder()
                                 .title(post.getTitle())
-                                .createdAt(post.getCreatedDate().toLocalDate())
+                                .createdAt(post.getCreatedAt().toLocalDate())
                                 .nickname(post.getMember().getNickname())
                                 .postId(post.getPostId())
                                 .build();

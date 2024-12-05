@@ -11,6 +11,7 @@ import com.konkuk.chapterkeep.likes.repository.LikesRepository;
 import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import com.konkuk.chapterkeep.member.service.MemberService;
 import com.konkuk.chapterkeep.post.repository.EssayPostRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LikesService {
 
     private final LikesRepository likesRepository;

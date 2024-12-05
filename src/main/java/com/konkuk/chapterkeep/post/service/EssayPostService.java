@@ -20,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EssayPostService {
 
     private final MemberService memberService;
@@ -49,8 +50,8 @@ public class EssayPostService {
                 .postTitle(essayPost.getTitle())
                 .anonymous(essayPost.isAnonymous())
                 .content(essayPost.getContent())
-                .createdAt(essayPost.getCreatedDate())
-                .modifiedAt(essayPost.getModifiedDate())
+                .createdAt(essayPost.getCreatedAt())
+                .modifiedAt(essayPost.getModifiedAt())
                 .likesCount(likesRepository.countByPost_PostId(essayPost.getPostId()))
                 .build();
     }

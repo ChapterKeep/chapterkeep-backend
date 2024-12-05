@@ -12,6 +12,7 @@ import com.konkuk.chapterkeep.home.dto.ProfileResDto;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
 import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import com.konkuk.chapterkeep.member.service.MemberService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class HomeService {
 
     private final MemberService memberService;

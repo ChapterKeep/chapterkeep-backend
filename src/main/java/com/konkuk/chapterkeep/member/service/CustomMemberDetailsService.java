@@ -3,6 +3,7 @@ package com.konkuk.chapterkeep.member.service;
 import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.member.dto.CustomMemberDetails;
 import com.konkuk.chapterkeep.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CustomMemberDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;

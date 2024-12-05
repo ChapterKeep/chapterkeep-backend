@@ -13,6 +13,7 @@ import com.konkuk.chapterkeep.domain.KonkukBookList;
 import com.konkuk.chapterkeep.domain.posts.EssayPost;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
 import com.konkuk.chapterkeep.post.repository.EssayPostRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostBoardService {
 
     private final BookInfoRepository bookInfoRepository;

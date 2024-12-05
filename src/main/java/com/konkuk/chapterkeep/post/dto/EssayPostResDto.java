@@ -38,8 +38,8 @@ public class EssayPostResDto {
                 .postTitle(essayPost.getTitle())
                 .anonymous(essayPost.isAnonymous())
                 .content(essayPost.getContent())
-                .createdAt(essayPost.getCreatedDate())
-                .modifiedAt(essayPost.getModifiedDate())
+                .createdAt(essayPost.getCreatedAt())
+                .modifiedAt(essayPost.getModifiedAt())
                 .likesCount(likesCount)
                 .build();
     }
