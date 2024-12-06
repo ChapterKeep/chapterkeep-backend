@@ -6,8 +6,6 @@ import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.domain.Post;
 import com.konkuk.chapterkeep.domain.posts.EssayPost;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
-import com.konkuk.chapterkeep.member.repository.MemberRepository;
-import com.konkuk.chapterkeep.member.service.MemberService;
 import com.konkuk.chapterkeep.post.dto.EssayPostListResDto;
 import com.konkuk.chapterkeep.post.dto.EssayPostReqDto;
 import com.konkuk.chapterkeep.post.dto.EssayPostResDto;
@@ -152,7 +150,7 @@ public class EssayPostService {
         try {
 
             if (keyword == null || keyword.trim().isEmpty()) {
-                throw new GeneralException(Code.INVALID_INPUT_VALUE, "유효하지 않은 검색어: " + keyword);
+                throw new GeneralException(Code.INVALID_INPUT_VALUE, "비어있는 게시글 검색어 ");
             }
 
             List<EssayPost> posts = essayPostRepository.findByTitleContainingOrContentContaining(keyword, keyword);

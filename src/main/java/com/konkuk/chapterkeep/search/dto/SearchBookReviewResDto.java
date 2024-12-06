@@ -1,6 +1,5 @@
 package com.konkuk.chapterkeep.search.dto;
 
-import com.konkuk.chapterkeep.bookReview.dto.BookReviewResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

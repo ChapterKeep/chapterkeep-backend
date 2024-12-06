@@ -9,7 +9,6 @@ import com.konkuk.chapterkeep.member.dto.SignUpReqDto;
 import com.konkuk.chapterkeep.member.dto.SignUpResDto;
 import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

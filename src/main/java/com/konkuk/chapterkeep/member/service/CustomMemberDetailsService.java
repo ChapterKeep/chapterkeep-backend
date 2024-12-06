@@ -1,6 +1,5 @@
 package com.konkuk.chapterkeep.member.service;
 
-import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.member.dto.CustomMemberDetails;
 import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;

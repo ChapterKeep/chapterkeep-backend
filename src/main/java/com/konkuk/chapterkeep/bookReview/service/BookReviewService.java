@@ -11,10 +11,7 @@ import com.konkuk.chapterkeep.domain.BookReview;
 import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.domain.enums.CoverColor;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
-import com.konkuk.chapterkeep.member.repository.MemberRepository;
-import com.konkuk.chapterkeep.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
