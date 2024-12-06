@@ -39,9 +39,6 @@ public class HomeService {
 
             // 사용자 독서 기록 데이터
             List<BookReview> bookReviews = bookReviewRepository.findByMember_MemberId(currentMemberId);
-            if (bookReviews.isEmpty()) {
-                throw new GeneralException(Code.NOT_FOUND, "해당 사용자의 독서 기록이 존재하지 않음 : " + currentMemberId);
-            }
 
             List<BookShelfResDto> bookShelfResDtoList = bookReviews.stream()
                     .map(bookReview -> BookShelfResDto.builder()
