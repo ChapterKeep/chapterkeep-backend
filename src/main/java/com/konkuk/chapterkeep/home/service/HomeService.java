@@ -10,7 +10,6 @@ import com.konkuk.chapterkeep.home.dto.BookShelfResDto;
 import com.konkuk.chapterkeep.home.dto.HomeResDto;
 import com.konkuk.chapterkeep.home.dto.ProfileResDto;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
-import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import com.konkuk.chapterkeep.member.service.MemberService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
