@@ -29,9 +29,7 @@ public class JWTUtil {
             throw new IllegalArgumentException("토큰이 만료되었습니다.");
         } catch (SignatureException e) {
             throw new IllegalArgumentException("서명이 유효하지 않습니다.");
-        } catch (Exception e) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
-        }
+        } 
     }
 
     // 토큰에서 role 검증,추출하는 메서드

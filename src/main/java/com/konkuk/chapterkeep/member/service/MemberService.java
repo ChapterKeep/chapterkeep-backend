@@ -20,7 +20,12 @@ public class MemberService {
 
     // 현재 인증된 사용자 Member 객체 반환
     public Member getCurrentMember() {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        String name;
+        try{
+            name = SecurityContextHolder.getContext().getAuthentication().getName();
+        }catch (Exception e){
+            throw new GeneralException(Code.MEMBER_NOT_FOUND, "현재 인증된 사용자가 없습니다.");
+        }
         return memberRepository.findByName(name)
                 .orElseThrow(() -> new GeneralException(Code.MEMBER_NOT_FOUND, "현재 인증된 사용자가 없습니다."));
     }
