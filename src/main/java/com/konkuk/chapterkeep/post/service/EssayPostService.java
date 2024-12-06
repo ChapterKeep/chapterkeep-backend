@@ -157,6 +157,7 @@ public class EssayPostService {
 
             return posts.stream()
                     .map(post -> EssayPostListResDto.builder()
+                            .postId(post.getPostId())
                             .postTitle(post.getTitle())
                             .nickname(post.getMember().getNickname())
                             .likesCount(likesRepository.countByPost_PostId(post.getPostId()))
