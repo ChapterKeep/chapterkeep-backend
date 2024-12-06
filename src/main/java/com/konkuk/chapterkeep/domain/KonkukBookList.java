@@ -1,10 +1,7 @@
 package com.konkuk.chapterkeep.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "konkuk_book_list")

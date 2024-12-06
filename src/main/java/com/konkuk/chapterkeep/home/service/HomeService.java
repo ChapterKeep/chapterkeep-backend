@@ -1,6 +1,5 @@
 package com.konkuk.chapterkeep.home.service;
 
-import com.konkuk.chapterkeep.bookReview.dto.BookReviewResDto;
 import com.konkuk.chapterkeep.bookReview.repository.BookReviewRepository;
 import com.konkuk.chapterkeep.common.response.enums.Code;
 import com.konkuk.chapterkeep.common.response.exception.GeneralException;
@@ -10,7 +9,6 @@ import com.konkuk.chapterkeep.home.dto.BookShelfResDto;
 import com.konkuk.chapterkeep.home.dto.HomeResDto;
 import com.konkuk.chapterkeep.home.dto.ProfileResDto;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
-import com.konkuk.chapterkeep.member.service.MemberService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

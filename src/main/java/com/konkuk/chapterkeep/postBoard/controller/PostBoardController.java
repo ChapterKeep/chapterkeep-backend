@@ -26,7 +26,7 @@ public class PostBoardController {
     }
 
     @GetMapping
-    public DataResponseDto<PostBoardResDto> recommendBookByRentalCount() {
+    public DataResponseDto<PostBoardResDto> getPostBoardData() {
         PostBoardResDto response = postBoardService.getPostBoardData();
         return new DataResponseDto<>(response, Code.OK, "게시판 조회 데이터 응답 성공");
     }

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class SearchService {
         try {
 
             if (title == null || title.trim().isEmpty()) {
-                throw new GeneralException(Code.BAD_REQUEST, "비어있는 제목 검색어");
+                throw new GeneralException(Code.INVALID_INPUT_VALUE, "비어있는 제목 검색어");
             }
 
             List<BookInfo> bookInfoList = bookInfoRepository.findByTitleContaining(title);

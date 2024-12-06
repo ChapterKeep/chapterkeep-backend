@@ -3,12 +3,10 @@ package com.konkuk.chapterkeep.member.dto;
 import com.konkuk.chapterkeep.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class CustomMemberDetails implements UserDetails {

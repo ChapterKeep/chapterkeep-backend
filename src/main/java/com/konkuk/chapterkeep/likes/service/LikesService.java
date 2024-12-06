@@ -8,7 +8,6 @@ import com.konkuk.chapterkeep.domain.Likes;
 import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.domain.Post;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
-import com.konkuk.chapterkeep.member.repository.MemberRepository;
 import com.konkuk.chapterkeep.member.service.MemberService;
 import com.konkuk.chapterkeep.post.repository.EssayPostRepository;
 import jakarta.transaction.Transactional;
