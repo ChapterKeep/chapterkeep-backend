@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BookReviewService {
 
     private final BookInfoRepository bookInfoRepository;
@@ -50,6 +51,7 @@ public class BookReviewService {
                 ? bookReviewReqDto.getCoverColor().toUpperCase()
                 : "WHITE";
 
+        // TODO : not null인 필드에 대해 예외 처리 하기 (위 coverColor 처럼)
         // BookReview 저장
         BookReview bookReview = BookReview.createBookReview(
                 member,
@@ -64,7 +66,7 @@ public class BookReviewService {
 
         return BookReviewCreateResDto.builder()
                 .reviewId(bookReview.getBookReviewId())
-                .createdAt(bookReview.getCreatedDate())
+                .createdAt(bookReview.getCreatedAt())
                 .build();
     }
 
@@ -95,8 +97,8 @@ public class BookReviewService {
                 .quotation(bookReview.getQuotation())
                 .content(bookReview.getContent())
                 .coverColor(coverColor)
-                .createdAt(bookReview.getCreatedDate())
-                .modifiedAt(bookReview.getModifiedDate())
+                .createdAt(bookReview.getCreatedAt())
+                .modifiedAt(bookReview.getModifiedAt())
                 .nickname(member.getNickname())
                 .likesCount(likesRepository.countByBookReview_BookReviewId(reviewId))
                 .build();
@@ -127,11 +129,10 @@ public class BookReviewService {
 
         return BookReviewUpdateResDto.builder()
                 .reviewId(bookReview.getBookReviewId())
-                .modifiedAt(bookReview.getModifiedDate())
+                .modifiedAt(bookReview.getModifiedAt())
                 .build();
     }
 
-    @Transactional
     public void deleteBookReview(Long reviewId) {
         if (!bookReviewRepository.existsById(reviewId)) {
             throw new GeneralException(Code.REVIEW_NOT_FOUND, "존재하지 않는 독서 기록 : " + reviewId);

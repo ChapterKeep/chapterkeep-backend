@@ -20,7 +20,7 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
     @Query("SELECT l.post.postId " +
             "FROM Likes l " +
             "GROUP BY l.post.postId " +
-            "ORDER BY COUNT(l.post.postId) DESC, MAX(l.post.createdDate) DESC")
+            "ORDER BY COUNT(l.post.postId) DESC, MAX(l.post.createdAt) DESC")
     List<Long> findTop3PostIdsByLikesCount();
 
 }

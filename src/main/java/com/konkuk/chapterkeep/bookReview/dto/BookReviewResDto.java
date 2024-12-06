@@ -35,8 +35,8 @@ public class BookReviewResDto {
                 .quotation(bookReview.getQuotation())
                 .content(bookReview.getContent())
                 .coverColor(bookReview.getCoverColor().name())
-                .createdAt(bookReview.getCreatedDate())
-                .modifiedAt(bookReview.getModifiedDate())
+                .createdAt(bookReview.getCreatedAt())
+                .modifiedAt(bookReview.getModifiedAt())
                 .nickname(bookReview.getMember().getNickname())
                 .likesCount(likesCount)
                 .build();
