@@ -91,15 +91,14 @@ public class JWTFilter extends OncePerRequestFilter {
             if (e.getMessage().contains("만료")) {
                 errorCode = Code.INVALID_TOKEN;
                 customMessage = "토큰이 만료되었습니다.";
+                setErrorResponse(response, errorCode, customMessage);
             } else if (e.getMessage().contains("서명")) {
                 errorCode = Code.INVALID_TOKEN;
                 customMessage = "서명이 유효하지 않습니다.";
-            } else {
-                errorCode = Code.INVALID_TOKEN;
-                customMessage = "";
+                setErrorResponse(response, errorCode, customMessage);
             }
 
-            setErrorResponse(response, errorCode, customMessage);
+
         }
     }
 

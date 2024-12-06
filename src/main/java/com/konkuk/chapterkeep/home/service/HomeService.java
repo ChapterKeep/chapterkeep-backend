@@ -11,6 +11,7 @@ import com.konkuk.chapterkeep.home.dto.HomeResDto;
 import com.konkuk.chapterkeep.home.dto.ProfileResDto;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
 import com.konkuk.chapterkeep.member.service.MemberService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,27 +19,24 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class HomeService {
 
-    private final MemberService memberService;
     private final BookReviewRepository bookReviewRepository;
     private final LikesRepository likesRepository;
 
-    public HomeResDto getHomeData() {
+    public HomeResDto getHomeData(Member member) {
 
         try {
             // 현재 사용자 ID 가져오기
-            Long currentMemberId = memberService.getCurrentMemberId();
-
-            // 사용자 프로필 데이터
-            Member member = memberService.getCurrentMember();
+            Long currentMemberId = member.getMemberId();
 
             ProfileResDto profileResDto = ProfileResDto.builder()
                     .nickname(member.getNickname())
                     .introduction(member.getIntroduction())
                     .profileUrl(member.getProfileUrl())
                     .visibility(member.getVisibility())
-                    .postCount((long) member.getPosts().size())
+                    .postCount((long) member.getBookReviews().size())
                     .build();
 
             // 사용자 독서 기록 데이터

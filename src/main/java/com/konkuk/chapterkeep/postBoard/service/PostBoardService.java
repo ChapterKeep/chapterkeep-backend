@@ -13,6 +13,7 @@ import com.konkuk.chapterkeep.domain.KonkukBookList;
 import com.konkuk.chapterkeep.domain.posts.EssayPost;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
 import com.konkuk.chapterkeep.post.repository.EssayPostRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostBoardService {
 
     private final BookInfoRepository bookInfoRepository;
@@ -34,47 +36,52 @@ public class PostBoardService {
 
 
     public List<BookReviewRecommendResDto> getMostReviewedBook() {
+        try {
 
-        Pageable pageable = PageRequest.of(0, 3);
-        List<Long> mostReviewedBookIds = bookReviewRepository.findBookIdsOrderByReviewCountDesc(pageable);
+            Pageable pageable = PageRequest.of(0, 3);
+            List<Long> mostReviewedBookIds = bookReviewRepository.findBookIdsOrderByReviewCountDesc(pageable);
 
-        return mostReviewedBookIds.stream()
-                .map(bookId -> bookInfoRepository.findById(bookId)
-                        .map(bookInfo -> BookReviewRecommendResDto.builder()
-                                .title(bookInfo.getTitle())
-                                .writer(bookInfo.getWriter())
-                                .cover_url(bookInfo.getCoverUrl())
-                                .build()
-                        )
-                        .orElse(null))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+            return mostReviewedBookIds.stream()
+                    .map(bookId -> bookInfoRepository.findById(bookId)
+                            .map(bookInfo -> BookReviewRecommendResDto.builder()
+                                    .title(bookInfo.getTitle())
+                                    .writer(bookInfo.getWriter())
+                                    .cover_url(bookInfo.getCoverUrl())
+                                    .build()
+                            )
+                            .orElse(null))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        }catch (GeneralException e){
+            throw e;
+        }catch (Exception e){
+            throw new GeneralException(Code.INTERNAL_ERROR, "독서 기록 수 상위 도서 조회 도중 알 수 없는 오류 발생");
+        }
     }
 
     public PostBoardResDto getPostBoardData() {
-        try {
+        List<RentalCountRecommendResDto> mostRentedBookList;
+        List<MostLikedEssayPostResDto> mostLikedEssayPostList;
 
+        try {
+            // 대출 수 상위 도서
             List<KonkukBookList> mostRentedBooks = konkukBookListRepository.findTop3ByOrderByRentalCountDesc();
-            if (mostRentedBooks.isEmpty()) {
-                throw new GeneralException(Code.NOT_FOUND, "대출 수 상위 도서를 찾을 수 없습니다.");
-            }
-            List<RentalCountRecommendResDto> mostRentedBookList = mostRentedBooks.stream()
+            mostRentedBookList = mostRentedBooks.stream()
                     .map(konkukBookList -> RentalCountRecommendResDto.builder()
                             .title(konkukBookList.getTitle())
                             .library_url(konkukBookList.getLibraryUrl())
                             .build()
                     )
                     .collect(Collectors.toList());
+        }catch (Exception e){
+            throw new GeneralException(Code.INTERNAL_ERROR, "대출 수 상위 도서 조회 도중 알 수 없는 오류 발생");
+        }
 
+        try {
+            // 좋아요 수 상위 도서
             List<Long> mostLikedEssayPostIds = likesRepository.findTop3PostIdsByLikesCount();
-            if (mostLikedEssayPostIds.isEmpty()) {
-                throw new GeneralException(Code.NOT_FOUND, "좋아요 수 상위 게시글을 찾을 수 없음");
-            }
             List<EssayPost> mostLikedEssayPosts = essayPostRepository.findPostsByPostIds(mostLikedEssayPostIds);
-            if (mostLikedEssayPosts.isEmpty()) {
-                throw new GeneralException(Code.NOT_FOUND, "좋아요 수 상위 게시글 데이터를 찾을 수 없음");
-            }
-            List<MostLikedEssayPostResDto> mostLikedEssayPostList = mostLikedEssayPosts.stream()
+            mostLikedEssayPostList = mostLikedEssayPosts.stream()
                     .map(post -> MostLikedEssayPostResDto.builder()
                             .profileUrl(post.getMember().getProfileUrl())
                             .nickname(post.getMember().getNickname())
@@ -84,13 +91,13 @@ public class PostBoardService {
                             .build()
                     )
                     .collect(Collectors.toList());
-
-            return PostBoardResDto.builder()
-                    .rentalCountRecommendResDtoList(mostRentedBookList)
-                    .essayPostResDtoList(mostLikedEssayPostList)
-                    .build();
-        } catch (Exception e) {
-            throw new GeneralException(Code.INTERNAL_ERROR, "게시판 데이터를 불러오는 중 오류 발생: " + e.getMessage());
+        }catch (Exception e){
+            throw new GeneralException(Code.INTERNAL_ERROR, "좋아요 수 상위 도서 조회 도중 알 수 없는 오류 발생");
         }
+
+        return PostBoardResDto.builder()
+                .rentalCountRecommendResDtoList(mostRentedBookList)
+                .essayPostResDtoList(mostLikedEssayPostList)
+                .build();
     }
 }

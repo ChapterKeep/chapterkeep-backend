@@ -25,13 +25,13 @@ public class BookSearchService {
     @Value("${naver.api.client-secret}")
     private String clientSecret;
 
-    public BookDto searchBooks(String keyword) {
+    public BookDto searchBook(String isbn) {
         // 요청 파라미터 유효성 검증
-        validateKeyword(keyword);
+        validateKeyword(isbn);
 
         try {
             // API 요청 URL 생성
-            String apiURL = "https://openapi.naver.com/v1/search/book.json?query=" + keyword;
+            String apiURL = "https://openapi.naver.com/v1/search/book.json?query=" + isbn;
 
             // RestTemplate 초기화 및 헤더 설정
             RestTemplate restTemplate = new RestTemplate();
@@ -51,7 +51,9 @@ public class BookSearchService {
             // JSON 응답 데이터 파싱
             return parseBookResponse(response.getBody());
 
-        } catch (Exception e) {
+        } catch (GeneralException e) {
+            throw e;
+        } catch (Exception e){
             throw new GeneralException(Code.INTERNAL_ERROR, "도서 검색 중 오류 발생 : " + e.getMessage());
         }
     }
@@ -84,7 +86,9 @@ public class BookSearchService {
             }
         } catch (JSONException e) {
                 throw new GeneralException(Code.INTERNAL_ERROR, "JSON 파싱 오류: " + e.getMessage());
-        } catch (Exception e) {
+        } catch (GeneralException e) {
+            throw e;
+        } catch (Exception e){
             throw new GeneralException(Code.INTERNAL_ERROR, "도서 데이터 처리 중 오류 발생: " + e.getMessage());
         }
     }

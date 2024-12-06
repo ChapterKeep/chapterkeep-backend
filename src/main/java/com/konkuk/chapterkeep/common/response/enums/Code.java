@@ -44,7 +44,8 @@ public enum Code {
 
     // 비즈니스 오류 (EBxxx)
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EB001", "해당 독서 기록이 존재하지 않습니다."),
-    POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EB002", "해당 게시글이 존재하지 않습니다.");
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "EB002", "해당 게시글이 존재하지 않습니다."),
+    POST_MISMATCH(HttpStatus.NOT_FOUND.value(), "EB003", "해당 게시글의 타입이 올바르지 않습니다.");
 
     private final int status;
     private final String code;
