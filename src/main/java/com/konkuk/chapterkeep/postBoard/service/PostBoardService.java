@@ -69,6 +69,8 @@ public class PostBoardService {
             mostRentedBookList = mostRentedBooks.stream()
                     .map(konkukBookList -> RentalCountRecommendResDto.builder()
                             .title(konkukBookList.getTitle())
+                            .department(konkukBookList.getDepartment())
+                            .rentalCount(konkukBookList.getRentalCount())
                             .library_url(konkukBookList.getLibraryUrl())
                             .build()
                     )

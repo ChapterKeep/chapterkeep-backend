@@ -8,5 +8,7 @@ import lombok.Getter;
 public class RentalCountRecommendResDto {
 
     private String title;
+    private String department;
+    private int rentalCount;
     private String library_url;
 }
