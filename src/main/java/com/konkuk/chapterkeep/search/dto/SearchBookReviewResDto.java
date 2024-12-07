@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 @Getter
 @Builder
@@ -13,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchBookReviewResDto {
 
+    private Long reviewId;
     private String reviewTitle;
     private String coverUrl;
     private String nickname;

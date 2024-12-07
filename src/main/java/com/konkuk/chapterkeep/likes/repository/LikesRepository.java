@@ -17,10 +17,12 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
     long countByBookReview_BookReviewId(Long bookReviewId);
     long countByPost_PostId(Long postId);
 
-    @Query("SELECT l.post.postId " +
-            "FROM Likes l " +
-            "GROUP BY l.post.postId " +
-            "ORDER BY COUNT(l.post.postId) DESC, MAX(l.post.createdAt) DESC")
+    @Query("SELECT p.postId " +
+            "FROM Post p " +
+            "JOIN Likes l ON p.postId = l.post.postId " +
+            "GROUP BY p.postId, p.createdAt " +
+            "HAVING COUNT(l.post.postId) > 0 " +
+            "ORDER BY COUNT(l.post.postId) DESC, p.createdAt DESC")
     List<Long> findTop3PostIdsByLikesCount();
 
 }

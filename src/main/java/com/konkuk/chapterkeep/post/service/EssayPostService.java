@@ -63,6 +63,7 @@ public class EssayPostService {
             List<EssayPost> essayPosts = essayPostRepository.findAll();
 
             return essayPosts.stream()
+                    .sorted((post1, post2) -> post2.getCreatedAt().compareTo(post1.getCreatedAt()))
                     .map(post -> EssayPostListResDto.builder()
                             .postId(post.getPostId())
                             .postTitle(post.getTitle())
@@ -153,9 +154,10 @@ public class EssayPostService {
                 throw new GeneralException(Code.INVALID_INPUT_VALUE, "비어있는 게시글 검색어 ");
             }
 
-            List<EssayPost> posts = essayPostRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+            List<EssayPost> posts = essayPostRepository.findByTitleContainingOrContentContainingOrderByCreatedAtDesc(keyword, keyword);
 
             return posts.stream()
+                    .sorted((post1, post2) -> post2.getCreatedAt().compareTo(post1.getCreatedAt()))
                     .map(post -> EssayPostListResDto.builder()
                             .postId(post.getPostId())
                             .postTitle(post.getTitle())
