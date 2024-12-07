@@ -20,7 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,13 +82,22 @@ public class PostBoardService {
         }
 
         try {
-            // 좋아요 수 상위 도서
+            // 좋아요 수 상위 백일장
             List<Long> mostLikedEssayPostIds = likesRepository.findTop3PostIdsByLikesCount();
             List<EssayPost> mostLikedEssayPosts = essayPostRepository.findPostsByPostIds(mostLikedEssayPostIds);
-            mostLikedEssayPostList = mostLikedEssayPosts.stream()
+
+            Map<Long, EssayPost> postMap = mostLikedEssayPosts.stream()
+                    .collect(Collectors.toMap(EssayPost::getPostId, Function.identity()));
+
+            List<EssayPost> sortedPosts = mostLikedEssayPostIds.stream()
+                    .map(postMap::get)
+                    .toList();
+
+            mostLikedEssayPostList = sortedPosts.stream()
                     .map(post -> MostLikedEssayPostResDto.builder()
                             .profileUrl(post.getMember().getProfileUrl())
                             .nickname(post.getMember().getNickname())
+                            .postId(post.getPostId())
                             .postTitle(post.getTitle())
                             .anonymous(post.isAnonymous())
                             .likesCount(likesRepository.countByPost_PostId(post.getPostId()))

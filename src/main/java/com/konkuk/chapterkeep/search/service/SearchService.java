@@ -36,6 +36,7 @@ public class SearchService {
             return bookInfoList.stream()
                     .flatMap(bookInfo -> bookReviewRepository.findByBookInfo_BookId(bookInfo.getBookId()).stream()
                             .map(bookReview -> SearchBookReviewResDto.builder()
+                                    .reviewId(bookReview.getBookReviewId())
                                     .reviewTitle(bookReview.getReviewTitle())
                                     .coverUrl(bookInfo.getCoverUrl())
                                     .nickname(bookReview.getMember().getNickname())
@@ -60,9 +61,11 @@ public class SearchService {
             List<Member> members = memberRepository.findByNicknameContaining(nickname);
 
             return members.stream()
+                    .filter(member -> Boolean.TRUE.equals(member.getVisibility()))
                     .map(member -> {
                         long bookReviewCount = bookReviewRepository.countByMember_MemberId(member.getMemberId());
                         return SearchBookShelfResDto.builder()
+                                .memberId(member.getMemberId())
                                 .nickname(member.getNickname())
                                 .profileUrl(member.getProfileUrl())
                                 .bookReviewCount(bookReviewCount)

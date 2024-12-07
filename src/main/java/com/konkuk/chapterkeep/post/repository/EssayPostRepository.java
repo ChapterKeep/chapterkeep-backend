@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface EssayPostRepository extends JpaRepository<EssayPost, Long> {
-    List<EssayPost> findByTitleContainingOrContentContaining(String titleKeyword, String contentKeyword);
+    List<EssayPost> findByTitleContainingOrContentContainingOrderByCreatedAtDesc(String titleKeyword, String contentKeyword);
 
     @Query("SELECT e FROM EssayPost e WHERE e.postId IN :postIds")
     List<EssayPost> findPostsByPostIds(@Param("postIds") List<Long> postIds);
