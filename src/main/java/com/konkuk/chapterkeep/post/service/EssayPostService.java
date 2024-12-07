@@ -6,6 +6,7 @@ import com.konkuk.chapterkeep.domain.Member;
 import com.konkuk.chapterkeep.domain.Post;
 import com.konkuk.chapterkeep.domain.posts.EssayPost;
 import com.konkuk.chapterkeep.likes.repository.LikesRepository;
+import com.konkuk.chapterkeep.post.dto.EssayPostCreateResDto;
 import com.konkuk.chapterkeep.post.dto.EssayPostListResDto;
 import com.konkuk.chapterkeep.post.dto.EssayPostReqDto;
 import com.konkuk.chapterkeep.post.dto.EssayPostResDto;
@@ -24,7 +25,7 @@ public class EssayPostService {
     private final LikesRepository likesRepository;
     private final EssayPostRepository essayPostRepository;
 
-    public EssayPostResDto createEssayPost(Member member, EssayPostReqDto essayPostReqDto) {
+    public EssayPostCreateResDto createEssayPost(Member member, EssayPostReqDto essayPostReqDto) {
         try {
             // 요청 데이터 유효성 검사
             validateEssayPostRequest(essayPostReqDto);
@@ -39,17 +40,10 @@ public class EssayPostService {
             );
             essayPostRepository.save(essayPost);
 
-            return EssayPostResDto.builder()
+            return EssayPostCreateResDto.builder()
                     .memberId(memberId)
-                    .nickname(member.getNickname())
-                    .profileUrl(member.getProfileUrl())
                     .postId(essayPost.getPostId())
-                    .postTitle(essayPost.getTitle())
-                    .anonymous(essayPost.isAnonymous())
-                    .content(essayPost.getContent())
                     .createdAt(essayPost.getCreatedAt())
-                    .modifiedAt(essayPost.getModifiedAt())
-                    .likesCount(likesRepository.countByPost_PostId(essayPost.getPostId()))
                     .build();
         }catch (GeneralException e){
             throw e;
