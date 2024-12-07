@@ -25,17 +25,17 @@ public class MypageService {
 
             // 1. 사용자가 작성한 게시글
             List<MypagePostListDto> myPosts = getMyPosts(member).stream()
-                    .limit(2) // 상위 2개만 추출
+                    .limit(3) // 상위 3개만 추출
                     .toList();
 
             // 2. 댓글 단 게시글
             List<MypagePostListDto> commentedPosts = getCommentedPosts(member).stream()
-                    .limit(2) // 상위 2개만 추출
+                    .limit(3) // 상위 3개만 추출
                     .toList();
 
             // 3. 좋아요 누른 게시글
             List<MypagePostListDto> likedPosts = getLikedPosts(member).stream()
-                    .limit(2) // 상위 2개만 추출
+                    .limit(3) // 상위 3개만 추출
                     .toList();
 
             return MypageResDto.builder()
