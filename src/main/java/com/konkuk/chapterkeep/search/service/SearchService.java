@@ -34,7 +34,7 @@ public class SearchService {
             List<BookInfo> bookInfoList = bookInfoRepository.findByTitleContaining(title);
 
             return bookInfoList.stream()
-                    .flatMap(bookInfo -> bookReviewRepository.findByBookInfo_BookId(bookInfo.getBookId()).stream()
+                    .flatMap(bookInfo -> bookReviewRepository.findByBookInfo_BookIdAndMemberVisibility(bookInfo.getBookId()).stream()
                             .map(bookReview -> SearchBookReviewResDto.builder()
                                     .reviewId(bookReview.getBookReviewId())
                                     .reviewTitle(bookReview.getReviewTitle())
@@ -58,10 +58,9 @@ public class SearchService {
                 throw new GeneralException(Code.INVALID_INPUT_VALUE, "비어있는 닉네임 검색어");
             }
 
-            List<Member> members = memberRepository.findByNicknameContaining(nickname);
+            List<Member> members = memberRepository.findByNicknameContainingAndVisibilityTrue(nickname);
 
             return members.stream()
-                    .filter(member -> Boolean.TRUE.equals(member.getVisibility()))
                     .map(member -> {
                         long bookReviewCount = bookReviewRepository.countByMember_MemberId(member.getMemberId());
                         return SearchBookShelfResDto.builder()
