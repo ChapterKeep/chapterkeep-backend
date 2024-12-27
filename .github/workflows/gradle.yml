@@ -52,6 +52,6 @@ jobs:
         script: |
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/gomaoom:latest
           docker stop $(docker ps -a -q)
-          docker run -d --log-driver=syslog -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod ${{ secrets.DOCKERHUB_USERNAME }}/chapterkeep:latest
+          docker run -d --log-driver=syslog -p 8080:8080 -e SPRING_PROFILES_ACTIVE=dev ${{ secrets.DOCKERHUB_USERNAME }}/chapterkeep:latest
           docker rm $(docker ps --filter 'status=exited' -a -q)
           docker image prune -a -f
