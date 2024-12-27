@@ -21,11 +21,11 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: make application-prod.yml
+    - name: Create application-dev.yml
       run: |
         cd ./src/main/resources
-        touch ./application-prod.yml
-        echo "${{ secrets.APPLICATION_PROD }}" > ./application-prod.yml
+        touch ./application-dev.yml
+        echo "${{ secrets.APPLICATION_DEV }}" > ./application-dev.yml
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -50,7 +50,7 @@ jobs:
         key: ${{ secrets.EC2_PRIVATE_KEY }} # pem 키
         # 도커 작업
         script: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/gomaoom:latest
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/gomaoom:latest
           docker stop $(docker ps -a -q)
           docker run -d --log-driver=syslog -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod ${{ secrets.DOCKERHUB_USERNAME }}/chapterkeep:latest
           docker rm $(docker ps --filter 'status=exited' -a -q)
