@@ -50,7 +50,7 @@ jobs:
         key: ${{ secrets.EC2_PRIVATE_KEY }} # pem 키
         # 도커 작업
         script: |
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/gomaoom:latest
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/chapterkeep:latest
           docker stop $(docker ps -a -q)
           docker run -d --log-driver=syslog -p 8080:8080 -e SPRING_PROFILES_ACTIVE=dev ${{ secrets.DOCKERHUB_USERNAME }}/chapterkeep:latest
           docker rm $(docker ps --filter 'status=exited' -a -q)
